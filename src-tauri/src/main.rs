@@ -67,12 +67,12 @@ fn main() {
                         move |app, _shortcut, event| {
                             if event.state == ShortcutState::Pressed {
                                 if let Some(window) = app.get_webview_window("main") {
-                                    if window.is_visible().unwrap_or(false) {
-                                        let _ = window.hide();
-                                    } else {
+                                    let visible =  window.is_visible().unwrap_or(false);
+                                    if !visible {
                                         let _ = window.show();
-                                        let _ = window.set_focus();
                                     }
+                                    let _ = window.set_focus();
+                                    
                                 }
                             }
                         },

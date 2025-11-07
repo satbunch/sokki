@@ -23,13 +23,15 @@ function App() {
       setTimeout(() => {
         const textarea = document.querySelector('textarea');
         textarea?.focus();
-      }, 100);
+      }, 50);
     });
 
-    // ウィンドウのフォーカスイベントを監視
+    // フォーカスが戻ってきた時だけtextareaにフォーカスする
     const unlistenFocusPromise = appWindow.onFocusChanged(({ payload: focused }) => {
-      if (!focused) {
-        appWindow.hide();
+      if (focused) {
+        setTimeout(() => {
+          document.querySelector('textarea')?.focus();
+        }, 50);
       }
     });
 
@@ -53,12 +55,11 @@ function App() {
     // 初回フォーカス
     setTimeout(() => {
       document.querySelector('textarea')?.focus();
-    }, 100);
+    }, 50);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       unlistenNewMemoPromise.then((unlisten) => unlisten());
-      unlistenFocusPromise.then((unlisten) => unlisten());
     };
   }, []);
 

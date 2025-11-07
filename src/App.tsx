@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { listen } from '@tauri-apps/api/event';
@@ -10,6 +10,26 @@ function App() {
   const [text, setText] = useState('');
   const [showCopied, setShowCopied] = useState(false);
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const focusTextarea = () => {
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      } else {
+        document.querySelector('textarea')?.focus();
+      }
+    }, 50);
+  }
+
+  const handleCopy = async () => {
+    if (text) {
+      await writeText(text);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 1500);
+    }
+  };
+
   useEffect(() => {
     // new-mwmoを1回だけリッスン
     const unlistenNewMemoPromise = listen<{ mode?: string }>('new-memo', (e) => {
@@ -18,20 +38,13 @@ function App() {
       if (mode === 'new') {
         setText('');
       }
-
-      // フォーカス
-      setTimeout(() => {
-        const textarea = document.querySelector('textarea');
-        textarea?.focus();
-      }, 50);
+      focusTextarea();
     });
 
     // フォーカスが戻ってきた時だけtextareaにフォーカスする
     const unlistenFocusPromise = appWindow.onFocusChanged(({ payload: focused }) => {
       if (focused) {
-        setTimeout(() => {
-          document.querySelector('textarea')?.focus();
-        }, 50);
+        focusTextarea();
       }
     });
 
@@ -52,24 +65,15 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
 
-    // 初回フォーカス
-    setTimeout(() => {
-      document.querySelector('textarea')?.focus();
-    }, 50);
+    focusTextarea();
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       unlistenNewMemoPromise.then((unlisten) => unlisten());
+      unlistenFocusPromise.then((unlisten) => unlisten());
     };
   }, []);
 
-  const handleCopy = async () => {
-    if (text) {
-      await writeText(text);
-      setShowCopied(true);
-      setTimeout(() => setShowCopied(false), 1500);
-    }
-  };
 
   return (
     <div className="container">
@@ -79,6 +83,13 @@ function App() {
         placeholder="メモを入力..."
         autoFocus
         spellCheck={false}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            appWindow.hide();
+          }
+        }}
       />
 
       <div className="footer">

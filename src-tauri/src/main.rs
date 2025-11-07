@@ -7,6 +7,7 @@ use tauri::{
     Manager, Emitter,
 };
 use tauri_plugin_global_shortcut::{Code, Modifiers, Shortcut, ShortcutState, GlobalShortcutExt};
+use serde_json::json;
 
 fn main() {
     tauri::Builder::default()
@@ -49,33 +50,60 @@ fn main() {
                 })
                 .build(app)?;
 
-            // ウィンドウの取得
+            // ウィンドウの取得して最初は非表示
             let window = app.get_webview_window("main").unwrap();
-            
-            // 初期状態で非表示
             window.hide().unwrap();
 
-            // グローバルショートカット登録 (Cmd+Shift+Space)
-            app.global_shortcut()
-                .on_shortcut(
-                    Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN),
-                    move |app, _shortcut, event| {
-                        if event.state == ShortcutState::Pressed {
-                            if let Some(window) = app.get_webview_window("main") {
-                                if window.is_visible().unwrap_or(false) {
-                                    let _ = window.hide();
-                                } else {
-                                    let _ = window.show();
-                                    let _ = window.set_focus();
-                                    // フロントエンドにイベント送信（新規テキストフィールド用）
-                                    let _ = window.emit("new-memo", ());
+            // ====== グローバルショートカット登録 =====
+            // 表示/非表示をトグルするショートカット (Cmd+Shift+M)
+            let app_handle = app.handle();
+
+            {
+                let app_handle_for_toggle = app_handle.clone();
+                app_handle
+                    .global_shortcut()
+                    .on_shortcut(
+                        Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyM),
+                        move |app, _shortcut, event| {
+                            if event.state == ShortcutState::Pressed {
+                                if let Some(window) = app.get_webview_window("main") {
+                                    if window.is_visible().unwrap_or(false) {
+                                        let _ = window.hide();
+                                    } else {
+                                        let _ = window.show();
+                                        let _ = window.set_focus();
+                                    }
                                 }
                             }
-                        }
-                    },
-                )
-                .unwrap();
+                        },
+                    )?;
+            }
 
+
+            // 「新規メモを開く」ショートカット (Cmd+Shift+N)
+            // こっちは表示させた上で new-memo を送る
+            {
+                let app_handle_for_new = app_handle.clone();
+                app_handle
+                    .global_shortcut()
+                    .on_shortcut(
+                        Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN),
+                        move |app, _shortcut, event| {
+                            if event.state == ShortcutState::Pressed {
+                                if let Some(window) = app.get_webview_window("main") {
+                                    if window.is_visible().unwrap_or(false) {
+                                        let _ = window.hide();
+                                    } else {
+                                        let _ = window.show();
+                                        let _ = window.set_focus();
+                                        // modeつきで送るとReact側で分岐しやすい
+                                        let _ = window.emit("new-memo", json!({ "mode": "new" }));
+                                    }
+                                }
+                            }
+                        },
+                    )?;
+            }
             Ok(())
         })
         .run(tauri::generate_context!())

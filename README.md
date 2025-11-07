@@ -11,7 +11,7 @@ A minimalist, lightning-fast note-taking app for macOS with a beautiful Mac-nati
 
 ## Keyboard Shortcuts
 
-- `⌘ + Shift + Space`: Show/Hide window
+- `⌘ + Shift + N`: Show/Hide window
 - `⌘ + C`: Copy all text (when no text is selected)
 - `Esc`: Close window
 
@@ -79,10 +79,10 @@ blink-note/
 
 ### Change Keyboard Shortcut
 
-Edit `src-tauri/src/main.rs` around line 59:
+Edit `src-tauri/src/main.rs` around line 61:
 
 ```rust
-Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::Space),
+Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN),
 ```
 
 Examples:

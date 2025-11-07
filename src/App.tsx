@@ -11,16 +11,26 @@ function App() {
   const [showCopied, setShowCopied] = useState(false);
 
   useEffect(() => {
-    // 新規メモイベントをリッスン
-    const unlisten = listen('new-memo', () => {
-      setText('');
-      // フォーカスを確実に当てる
+    // new-mwmoを1回だけリッスン
+    const unlistenNewMemoPromise = listen<{ mode?: string }>('new-memo', (e) => {
+      //将来 mode を渡す想定。今は毎回初期化になってるならここで絞る
+      const mode = e.payload?.mode ?? 'new';
+      if (mode === 'new') {
+        setText('');
+      }
+
+      // フォーカス
       setTimeout(() => {
         const textarea = document.querySelector('textarea');
-        if (textarea) {
-          textarea.focus();
-        }
+        textarea?.focus();
       }, 100);
+    });
+
+    // ウィンドウのフォーカスイベントを監視
+    const unlistenFocusPromise = appWindow.onFocusChanged(({ payload: focused }) => {
+      if (!focused) {
+        appWindow.hide();
+      }
     });
 
     // Escキーで閉じる
@@ -47,9 +57,10 @@ function App() {
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      unlisten.then((fn) => fn());
+      unlistenNewMemoPromise.then((unlisten) => unlisten());
+      unlistenFocusPromise.then((unlisten) => unlisten());
     };
-  }, [text]);
+  }, []);
 
   const handleCopy = async () => {
     if (text) {
@@ -61,15 +72,6 @@ function App() {
 
   return (
     <div className="container">
-      <div className="window-drag-region" data-tauri-drag-region>
-        <div className="header">
-          <div className="title">Blink Note</div>
-          <button className="close-button" onClick={() => appWindow.hide()}>
-            ×
-          </button>
-        </div>
-      </div>
-
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}

@@ -31,9 +31,9 @@ function App() {
   };
 
   useEffect(() => {
-    // new-mwmoを1回だけリッスン
+    // Listen to new-memo event once
     const unlistenNewMemoPromise = listen<{ mode?: string }>('new-memo', (e) => {
-      //将来 mode を渡す想定。今は毎回初期化になってるならここで絞る
+      // Future: mode parameter for different behaviors
       const mode = e.payload?.mode ?? 'new';
       if (mode === 'new') {
         setText('');
@@ -41,19 +41,19 @@ function App() {
       focusTextarea();
     });
 
-    // フォーカスが戻ってきた時だけtextareaにフォーカスする
+    // Focus textarea when window gains focus
     const unlistenFocusPromise = appWindow.onFocusChanged(({ payload: focused }) => {
       if (focused) {
         focusTextarea();
       }
     });
 
-    // Escキーで閉じる
+    // Hide window on Escape key
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         appWindow.hide();
       }
-      // Cmd+C または Ctrl+C でコピー（テキスト選択がない場合）
+      // Copy all text with Cmd+C / Ctrl+C when no text is selected
       if ((e.metaKey || e.ctrlKey) && e.key === 'c') {
         const selection = window.getSelection()?.toString();
         if (!selection && text) {
@@ -72,7 +72,7 @@ function App() {
       unlistenNewMemoPromise.then((unlisten) => unlisten());
       unlistenFocusPromise.then((unlisten) => unlisten());
     };
-  }, []);
+  }, [text]);
 
 
   return (
@@ -80,7 +80,7 @@ function App() {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="メモを入力..."
+        placeholder="Type your note..."
         autoFocus
         spellCheck={false}
         onKeyDown={(e) => {
@@ -94,16 +94,17 @@ function App() {
 
       <div className="footer">
         <div className="shortcuts">
-          <span className="shortcut">⌘⇧Space 起動/閉じる</span>
-          <span className="shortcut">⌘C コピー</span>
-          <span className="shortcut">Esc 閉じる</span>
+          <span className="shortcut">⌘⇧M Show</span>
+          <span className="shortcut">⌘⇧N New</span>
+          <span className="shortcut">⌘C Copy</span>
+          <span className="shortcut">Esc Close</span>
         </div>
         <button
           className={`copy-button ${showCopied ? 'copied' : ''}`}
           onClick={handleCopy}
           disabled={!text}
         >
-          {showCopied ? '✓ コピー済み' : 'コピー'}
+          {showCopied ? '✓ Copied' : 'Copy'}
         </button>
       </div>
     </div>

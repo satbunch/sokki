@@ -11,7 +11,8 @@ A minimalist, lightning-fast note-taking app for macOS with a beautiful Mac-nati
 
 ## Keyboard Shortcuts
 
-- `⌘ + Shift + N`: Show/Hide window
+- `⌘ + Shift + M`: Show window and focus
+- `⌘ + Shift + N`: Toggle window and clear text (new memo)
 - `⌘ + C`: Copy all text (when no text is selected)
 - `Esc`: Close window
 
@@ -79,14 +80,20 @@ blink-note/
 
 ### Change Keyboard Shortcut
 
-Edit `src-tauri/src/main.rs` around line 61:
+There are two shortcuts:
 
+**Show/Focus shortcut** (line 66):
+```rust
+Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyM),
+```
+
+**New memo shortcut** (line 90):
 ```rust
 Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN),
 ```
 
 Examples:
-- `⌘ + M`: `Shortcut::new(Some(Modifiers::SUPER), Code::KeyM)`
+- `⌘ + K`: `Shortcut::new(Some(Modifiers::SUPER), Code::KeyK)`
 - `⌘ + Option + N`: `Shortcut::new(Some(Modifiers::SUPER | Modifiers::ALT), Code::KeyN)`
 
 ### Adjust Window Size

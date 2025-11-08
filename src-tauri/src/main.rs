@@ -15,7 +15,7 @@ fn main() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
-            // システムトレイの設定
+            // System tray configuration
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
@@ -50,12 +50,12 @@ fn main() {
                 })
                 .build(app)?;
 
-            // ウィンドウの取得して最初は非表示
+            // Get window and hide initially
             let window = app.get_webview_window("main").unwrap();
             window.hide().unwrap();
 
-            // ====== グローバルショートカット登録 =====
-            // 表示/非表示をトグルするショートカット (Cmd+Shift+M)
+            // ====== Global shortcut registration =====
+            // Show/Focus shortcut (Cmd+Shift+M)
             let app_handle = app.handle();
 
             {
@@ -80,8 +80,8 @@ fn main() {
             }
 
 
-            // 「新規メモを開く」ショートカット (Cmd+Shift+N)
-            // こっちは表示させた上で new-memo を送る
+            // New memo shortcut (Cmd+Shift+N)
+            // Shows window and emits new-memo event
             {
                 let app_handle_for_new = app_handle.clone();
                 app_handle
@@ -96,7 +96,7 @@ fn main() {
                                     } else {
                                         let _ = window.show();
                                         let _ = window.set_focus();
-                                        // modeつきで送るとReact側で分岐しやすい
+                                        // Send mode for React side branching
                                         let _ = window.emit("new-memo", json!({ "mode": "new" }));
                                     }
                                 }

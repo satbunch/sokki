@@ -20,7 +20,7 @@ function App() {
         document.querySelector('textarea')?.focus();
       }
     }, 50);
-  }
+  };
 
   const handleCopy = async () => {
     if (text) {
@@ -32,21 +32,22 @@ function App() {
 
   useEffect(() => {
     // Listen to new-memo event once
-    const unlistenNewMemoPromise = listen<{ mode?: string }>('new-memo', (e) => {
-      // Future: mode parameter for different behaviors
-      const mode = e.payload?.mode ?? 'new';
-      if (mode === 'new') {
-        setText('');
+    const unlistenNewMemoPromise = listen<{ mode?: string }>(
+      'new-memo',
+      () => {
+        // Reload to clear state and start fresh
+        window.location.reload();
       }
-      focusTextarea();
-    });
+    );
 
     // Focus textarea when window gains focus
-    const unlistenFocusPromise = appWindow.onFocusChanged(({ payload: focused }) => {
-      if (focused) {
-        focusTextarea();
+    const unlistenFocusPromise = appWindow.onFocusChanged(
+      ({ payload: focused }) => {
+        if (focused) {
+          focusTextarea();
+        }
       }
-    });
+    );
 
     // Hide window on Escape key
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -73,7 +74,6 @@ function App() {
       unlistenFocusPromise.then((unlisten) => unlisten());
     };
   }, [text]);
-
 
   return (
     <div className="container">

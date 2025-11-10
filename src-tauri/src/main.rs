@@ -80,10 +80,12 @@ fn main() {
                         if event.state == ShortcutState::Pressed {
                             if let Some(window) = app.get_webview_window("main") {
                                 let visible = window.is_visible().unwrap_or(false);
-                                if !visible {
+                                if visible {
+                                    let _ = window.hide();
+                                } else {
                                     let _ = window.show();
+                                    let _ = window.set_focus();
                                 }
-                                let _ = window.set_focus();
                             }
                         }
                     },
@@ -91,21 +93,18 @@ fn main() {
             }
 
             // New memo shortcut (Cmd+Shift+N)
-            // Shows window and emits new-memo event
+            // Always shows window and emits new-memo event
             {
                 app_handle.global_shortcut().on_shortcut(
                     Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN),
                     move |app, _shortcut, event| {
                         if event.state == ShortcutState::Pressed {
                             if let Some(window) = app.get_webview_window("main") {
-                                if window.is_visible().unwrap_or(false) {
-                                    let _ = window.hide();
-                                } else {
-                                    let _ = window.show();
-                                    let _ = window.set_focus();
-                                    // Send mode for React side branching
-                                    let _ = window.emit("new-memo", json!({ "mode": "new" }));
-                                }
+                                let _ = window.hide();
+                                let _ = window.show();
+                                let _ = window.set_focus();
+                                // Send mode for React side branching
+                                let _ = window.emit("new-memo", json!({ "mode": "new" }));
                             }
                         }
                     },

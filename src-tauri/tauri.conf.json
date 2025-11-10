@@ -21,7 +21,6 @@
         "center": true,
         "decorations": true,
         "transparent": false,
-        "skipTaskbar": true,
         "visible": false,
         "resizable": true,
         "maximizable": false
@@ -32,11 +31,6 @@
       "capabilities": [
         "main-capability"
       ]
-    },
-    "trayIcon": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true,
-      "menuOnLeftClick": false
     }
   },
   "bundle": {

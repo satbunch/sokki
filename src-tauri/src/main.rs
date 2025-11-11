@@ -1,8 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod tray;
+mod menu;
 mod shortcuts;
+mod tray;
 mod window;
 
 fn main() {
@@ -19,6 +20,9 @@ fn main() {
 
             // Initialize global shortcuts
             shortcuts::init(app)?;
+
+            // Initialize menu
+            menu::init(app)?;
 
             Ok(())
         })

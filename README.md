@@ -1,4 +1,4 @@
-# BlinkNote - Ultra-Lightweight Resident Memo App
+# Sokki - Ultra-Lightweight Resident Memo App
 
 A minimalist, lightning-fast note-taking app for macOS with a beautiful Mac-native design. Built with Tauri.
 
@@ -60,7 +60,7 @@ The built application will be in `src-tauri/target/release/bundle/`.
 ## Project Structure
 
 ```
-blink-note/
+sokki/
 ├── src/
 │   ├── App.tsx          # Main React component
 │   ├── App.css          # Styles

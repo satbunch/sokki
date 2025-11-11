@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "BlinkNote",
+  "productName": "Sokki",
   "version": "0.1.0",
   "identifier": "com.quickmemo.app",
   "build": {
@@ -13,7 +13,7 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "BlinkNote",
+        "title": "Sokki",
         "width": 600,
         "height": 400,
         "minWidth": 400,

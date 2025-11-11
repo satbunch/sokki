@@ -2,7 +2,7 @@
 authors = ["you"]
 description = "A Tauri App"
 edition = "2021"
-name = "blink-note"
+name = "sokki"
 version = "0.1.0"
 
 [build-dependencies]

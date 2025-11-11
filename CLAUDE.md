@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-**BlinkNote** は macOS 向けの超軽量・常駐型メモアプリケーション。Tauri (Rust + React) で構築され、グローバルショートカットで瞬時に起動できる Mac ネイティブデザインを採用している。
+**Sokki** は macOS 向けの超軽量・常駐型メモアプリケーション。Tauri (Rust + React) で構築され、グローバルショートカットで瞬時に起動できる Mac ネイティブデザインを採用している。
 
 ### 技術スタック
 - **Frontend**: React 18 + TypeScript + Vite

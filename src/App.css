@@ -387,3 +387,108 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 /* Dark mode is now handled via CSS variables in :root */
+
+/* Quick Settings Panel */
+.quick-settings {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.quick-settings-content {
+  background: var(--bg-container);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 20px 60px var(--shadow-lg);
+  width: 90%;
+  max-width: 300px;
+}
+
+.quick-settings-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.settings-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.settings-item label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.settings-input {
+  padding: 8px 12px;
+  border: 0.5px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: transparent;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.settings-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.settings-hint {
+  font-size: 11px;
+  color: var(--text-quaternary);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.settings-button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.settings-button-primary {
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+}
+
+.settings-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+}
+
+.settings-button-primary:active {
+  transform: translateY(0);
+}
+
+.settings-button-secondary {
+  background: var(--overlay-button-bg);
+  color: var(--text-secondary);
+}
+
+.settings-button-secondary:hover {
+  background: var(--overlay-active);
+}

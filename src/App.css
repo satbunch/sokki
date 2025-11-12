@@ -8,7 +8,7 @@
   --color-error: #ff3b30;
   --color-error-hover: #ff453a;
 
-  /* Background colors */
+  /* Light theme (Glassmorphism) */
   --bg-tabbar: rgba(32, 31, 31, 100);
   --bg-icon: rgba(32, 31, 31, 100);
   --bg-tooltip: rgba(20, 20, 20, 0.95);
@@ -45,10 +45,74 @@
   --scrollbar-hover: rgba(0, 0, 0, 0.25);
 }
 
+/* Light theme overrides (Glassmorphism) */
+:root[data-theme="light"] {
+  --bg-container: rgba(255, 255, 255, 0.85);
+  --bg-header: rgba(255, 255, 255, 0.4);
+  --bg-tab-inactive: rgba(255, 255, 255, 0.6);
+
+  --text-primary: rgba(0, 0, 0, 0.85);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-tertiary: rgba(0, 0, 0, 0.5);
+  --text-quaternary: rgba(0, 0, 0, 0.3);
+
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-dark: rgba(0, 0, 0, 0.1);
+
+  --overlay-subtle: rgba(0, 0, 0, 0.04);
+  --overlay-hover: rgba(0, 0, 0, 0.04);
+  --overlay-active: rgba(0, 0, 0, 0.08);
+  --overlay-button-bg: rgba(0, 0, 0, 0.04);
+
+  --shadow-sm: rgba(0, 0, 0, 0.15);
+  --shadow-md: rgba(0, 0, 0, 0.25);
+  --shadow-lg: rgba(0, 0, 0, 0.35);
+  --shadow-tooltip: rgba(0, 0, 0, 0.35);
+
+  --scrollbar-default: rgba(0, 0, 0, 0.15);
+  --scrollbar-hover: rgba(0, 0, 0, 0.25);
+}
+
+/* Dark theme (Matte + Blue accent) */
+:root[data-theme="dark"] {
+  /* Dark mode backgrounds */
+  --bg-container: rgba(30, 30, 30, 0.95);
+  --bg-header: rgba(255, 255, 255, 0.05);
+  --bg-tooltip: rgba(40, 40, 40, 0.98);
+  --bg-tab-inactive: rgba(255, 255, 255, 0.1);
+
+  /* Dark mode text colors */
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  --text-quaternary: rgba(255, 255, 255, 0.4);
+
+  /* Dark mode borders */
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-dark: rgba(255, 255, 255, 0.15);
+
+  /* Dark mode overlays */
+  --overlay-subtle: rgba(255, 255, 255, 0.08);
+  --overlay-hover: rgba(255, 255, 255, 0.08);
+  --overlay-active: rgba(255, 255, 255, 0.12);
+  --overlay-button-bg: rgba(255, 255, 255, 0.08);
+
+  /* Dark mode shadows */
+  --shadow-sm: rgba(0, 0, 0, 0.5);
+  --shadow-md: rgba(0, 0, 0, 0.5);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+  --shadow-tooltip: rgba(0, 0, 0, 0.5);
+
+  /* Dark mode scrollbar */
+  --scrollbar-default: rgba(255, 255, 255, 0.2);
+  --scrollbar-hover: rgba(255, 255, 255, 0.3);
+}
+
+/* prefers-color-scheme dark fallback (for browsers that don't support data-theme) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     /* Dark mode backgrounds */
-    --bg-container: rgba(30, 30, 30, 0.85);
+    --bg-container: rgba(30, 30, 30, 0.95);
     --bg-header: rgba(255, 255, 255, 0.05);
     --bg-tooltip: rgba(40, 40, 40, 0.98);
     --bg-tab-inactive: rgba(255, 255, 255, 0.1);
@@ -97,14 +161,25 @@ body {
   width: 100vw;
   height: 100vh;
   background: var(--bg-container);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   box-shadow:
     0 20px 60px var(--shadow-sm),
     0 0 0 0.5px var(--border-light);
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+/* Light theme glassmorphism effect */
+:root[data-theme="light"] .container {
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+/* Dark theme matte effect (no blur) */
+:root[data-theme="dark"] .container {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
 }
 
 .window-drag-region {
@@ -193,13 +268,24 @@ textarea::-webkit-scrollbar-thumb:hover {
   gap: 12px;
   background: var(--bg-tabbar);
   border-top: 0.5px solid var(--border-light);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-radius: 0 0 0 0;
   margin: 0;
   position: relative;
   z-index: 1000;
   overflow: visible;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+/* Light theme glassmorphism for tabbar */
+:root[data-theme="light"] .tab-bar {
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+/* Dark theme matte for tabbar */
+:root[data-theme="dark"] .tab-bar {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
 }
 
 /* Left spacer */

@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { useStore } from "./store";
+import { ThemeProvider } from "./theme/ThemeContext";
+import "./theme/tokens.css";
 
 // Initialize store and verify behavior
 useStore.getState().init().then(() => {
@@ -19,6 +21,8 @@ useStore.getState().init().then(() => {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
 );

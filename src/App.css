@@ -578,3 +578,34 @@ textarea::-webkit-scrollbar-thumb:hover {
 .settings-button-secondary:hover {
   background: var(--overlay-active);
 }
+
+/* Theme options radio buttons */
+.theme-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.theme-option:hover {
+  background: var(--overlay-hover);
+}
+
+.theme-option input[type="radio"] {
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.theme-option span {
+  font-size: 13px;
+  color: var(--text-primary);
+}

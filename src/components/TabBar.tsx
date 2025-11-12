@@ -1,6 +1,5 @@
 import { useStore } from '../store';
 import { TabItem } from './TabItem';
-import { ThemeMenu } from './ThemeMenu';
 
 /**
  * Clipboard icon SVG component
@@ -84,7 +83,6 @@ export function TabBar() {
         <div className={`copy-status-icon ${copyStatus === 'copied' ? 'copied' : ''}`}>
           {copyStatus === 'copied' ? <CheckIcon /> : <ClipboardIcon />}
         </div>
-        <ThemeMenu />
       </div>
     </div>
   );

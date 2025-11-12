@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store';
+import { useTheme } from '../theme/ThemeContext';
 
 interface QuickSettingsProps {
   onClose?: () => void;
@@ -8,10 +9,13 @@ interface QuickSettingsProps {
 export function QuickSettings({ onClose }: QuickSettingsProps) {
   const { settings } = useStore();
   const setMaxTabs = useStore((state) => state.setMaxTabs);
+  const { preference, setPreference } = useTheme();
   const [maxTabs, setMaxTabsLocal] = useState(settings.maxTabs);
+  const [themePreference, setThemePreferenceLocal] = useState(preference);
 
   const handleSave = () => {
     setMaxTabs(maxTabs);
+    setPreference(themePreference);
     onClose?.();
   };
 
@@ -39,6 +43,28 @@ export function QuickSettings({ onClose }: QuickSettingsProps) {
             className="settings-input"
           />
           <span className="settings-hint">(3 to 30)</span>
+        </div>
+
+        <div className="settings-item">
+          <label>Theme:</label>
+          <div className="theme-options">
+            {(['light', 'dark', 'system'] as const).map((opt) => (
+              <label
+                key={opt}
+                className="theme-option"
+              >
+                <input
+                  type="radio"
+                  name="theme"
+                  checked={themePreference === opt}
+                  onChange={() => setThemePreferenceLocal(opt)}
+                />
+                <span>
+                  {opt === 'light' ? 'Light' : opt === 'dark' ? 'Dark' : 'System'}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
 
         <div className="settings-actions">

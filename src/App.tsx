@@ -3,7 +3,7 @@ import { listen } from '@tauri-apps/api/event';
 import { useStore } from './store';
 import { Editor } from './components/Editor';
 import { TabBar } from './components/TabBar';
-import { QuickSettings } from './components/QuickSettings';
+import { Settings } from './components/Settings';
 import './App.css';
 
 function App() {
@@ -61,7 +61,7 @@ function App() {
     };
   }, []);
 
-  // Open settings with Cmd+,
+  // Open settings with Cmd+, or menu click
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === ',') {
@@ -74,12 +74,23 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeydown);
   }, []);
 
+  // Listen to settings menu event
+  useEffect(() => {
+    const unlistenPromise = listen('settings-menu', () => {
+      setShowSettings(true);
+    });
+
+    return () => {
+      unlistenPromise.then((unlisten) => unlisten());
+    };
+  }, []);
+
   return (
     <div className="container">
       <Editor />
       <TabBar />
       {showSettings && (
-        <QuickSettings onClose={() => setShowSettings(false)} />
+        <Settings onClose={() => setShowSettings(false)} />
       )}
     </div>
   );

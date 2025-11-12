@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useStore } from '../store';
 import { useTheme } from '../theme/ThemeContext';
 
-interface QuickSettingsProps {
+interface SettingsProps {
   onClose?: () => void;
 }
 
-export function QuickSettings({ onClose }: QuickSettingsProps) {
+export function Settings({ onClose }: SettingsProps) {
   const { settings } = useStore();
   const setMaxTabs = useStore((state) => state.setMaxTabs);
   const { preference, setPreference } = useTheme();
@@ -27,9 +27,9 @@ export function QuickSettings({ onClose }: QuickSettingsProps) {
   };
 
   return (
-    <div className="quick-settings">
-      <div className="quick-settings-content">
-        <h2 className="quick-settings-title">Quick Settings</h2>
+    <div className="settings-overlay">
+      <div className="settings-content">
+        <h2 className="settings-header">Settings</h2>
 
         <div className="settings-item">
           <label htmlFor="max-tabs-input">Maximum Tabs:</label>

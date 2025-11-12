@@ -474,8 +474,8 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Dark mode is now handled via CSS variables in :root */
 
-/* Quick Settings Panel */
-.quick-settings {
+/* Settings Panel */
+.settings-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -488,7 +488,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   z-index: 2000;
 }
 
-.quick-settings-content {
+.settings-content {
   background: var(--bg-container);
   border-radius: 12px;
   padding: 24px;
@@ -497,7 +497,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   max-width: 300px;
 }
 
-.quick-settings-title {
+.settings-header {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);

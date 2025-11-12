@@ -1,6 +1,6 @@
 use tauri::{
     menu::{Menu, MenuItem, PredefinedMenuItem, Submenu},
-    App,
+    App, Emitter,
 };
 
 pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
@@ -52,6 +52,17 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
 
     let menu = Menu::with_items(app, &[&app_menu, &file_menu, &edit_menu])?;
     app.set_menu(menu)?;
+
+    // Set up menu event handler
+    app.on_menu_event(|app_handle, event| {
+        match event.id.as_ref() {
+            "settings" => {
+                // Emit settings-menu event to React
+                let _ = app_handle.emit("settings-menu", ());
+            }
+            _ => {}
+        }
+    });
 
     Ok(())
 }

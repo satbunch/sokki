@@ -1,6 +1,5 @@
 import { Note } from '../types';
 import { previewTooltip } from '../utils/previewTooltip';
-import { Tooltip } from './Tooltip';
 
 interface TabItemProps {
   note: Note;
@@ -15,14 +14,15 @@ export function TabItem({ note, isActive, onClick, onContextMenu }: TabItemProps
     onContextMenu(note.id);
   };
 
+  const tooltipText = previewTooltip(note.content);
+
   return (
-    <Tooltip content={previewTooltip(note.content)}>
-      <button
-        className={`tab-item ${isActive ? 'active' : ''}`}
-        onClick={() => onClick(note.id)}
-        onContextMenu={handleContextMenu}
-        aria-label={`Note tab: ${previewTooltip(note.content)}`}
-      />
-    </Tooltip>
+    <button
+      className={`tab-item ${isActive ? 'active' : ''}`}
+      onClick={() => onClick(note.id)}
+      onContextMenu={handleContextMenu}
+      data-tooltip={tooltipText}
+      aria-label={`Note tab: ${tooltipText}`}
+    />
   );
 }

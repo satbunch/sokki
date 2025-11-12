@@ -1,7 +1,8 @@
 /**
  * Generate a tooltip preview from note content.
- * Extracts first 3 lines, takes first 10 chars of each line, joins with " / ".
- * If result is too long, appends "…" (ellipsis).
+ * Extracts first 3 non-empty lines, takes first 10 chars of each line.
+ * Lines are separated by newline character for multi-line tooltip display.
+ * If truncated, appends "…" (ellipsis).
  */
 export function previewTooltip(content: string): string {
   if (!content.trim()) {
@@ -24,16 +25,24 @@ export function previewTooltip(content: string): string {
     return 'Empty note';
   }
 
-  const preview = previewLines.join(' / ');
-  // Add ellipsis if preview is truncated or there are more lines
-  const hasMoreLines = lines.length > 3;
-  const isTruncated = previewLines.some((_line, idx) => {
-    const originalLine = lines[idx];
-    return originalLine.trim().length > 10;
+  // Join with newline for multi-line tooltip
+  const preview = previewLines.join('\n');
+
+  // Add ellipsis if there are more lines after the first 3
+  const nonEmptyLines = lines.filter(l => l.trim().length > 0);
+  if (nonEmptyLines.length > previewLines.length) {
+    return preview + '\n…';
+  }
+
+  // Add ellipsis if any line was truncated
+  const isTruncated = nonEmptyLines.some((line, idx) => {
+    if (idx >= previewLines.length) return false;
+    const trimmed = line.trim();
+    return trimmed.length > 10;
   });
 
-  if (preview.length > 50 || hasMoreLines || isTruncated) {
-    return preview.slice(0, 50) + '…';
+  if (isTruncated) {
+    return preview + '…';
   }
 
   return preview;

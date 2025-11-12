@@ -114,6 +114,9 @@ textarea::-webkit-scrollbar-thumb:hover {
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-radius: 0 0 0 0;
   margin: 0;
+  position: relative;
+  z-index: 1000;
+  overflow: visible;
 }
 
 /* Left spacer */
@@ -127,6 +130,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   display: grid;
   flex: 1;
   min-width: 0;
+  overflow: visible;
 }
 
 /* Right status area */
@@ -163,48 +167,40 @@ textarea::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* Tooltip wrapper */
-.tooltip-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-}
-
-.tooltip-content {
+/* CSS-based tooltip using data-tooltip attribute */
+.tab-item[data-tooltip]::after {
+  content: attr(data-tooltip);
   position: absolute;
-  bottom: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 4px;
+  bottom: 100%;
+  transform: translate(-50%, -8px);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100px;
+  padding: 8px 10px;
+  border-radius: 6px;
   font-size: 12px;
-  white-space: nowrap;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  opacity: 0;
   pointer-events: none;
-  margin-bottom: 8px;
-  z-index: 1000;
-  animation: tooltipFadeIn 0.15s ease-out;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 1001;
+  visibility: hidden;
 }
 
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+.tab-item[data-tooltip]:hover::after,
+.tab-item[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -12px);
 }
 
 /* Tab item button */
 .tab-item {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -372,9 +368,10 @@ textarea::-webkit-scrollbar-thumb:hover {
     color: #34C759;
   }
 
-  .tooltip-content {
-    background: rgba(255, 255, 255, 0.95);
-    color: rgba(0, 0, 0, 0.9);
+  .tab-item[data-tooltip]::after {
+    background: rgba(40, 40, 40, 0.98);
+    color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
   }
 
   .tooltip-wrapper > .tab-item {

@@ -1,112 +1,97 @@
-import { useEffect, useState, useRef } from 'react';
-import { getCurrentWindow } from '@tauri-apps/api/window';
-import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { useEffect, useState } from 'react';
 import { listen } from '@tauri-apps/api/event';
+import { useStore } from './store';
+import { Editor } from './components/Editor';
+import { TabBar } from './components/TabBar';
+import { Settings } from './components/Settings';
 import './App.css';
 
-const appWindow = getCurrentWindow();
-
 function App() {
-  const [text, setText] = useState('');
-  const [showCopied, setShowCopied] = useState(false);
+  const { init, createNewNote, activeId, deleteNote } = useStore();
+  const [showSettings, setShowSettings] = useState(false);
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const focusTextarea = () => {
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-      } else {
-        document.querySelector('textarea')?.focus();
-      }
-    }, 50);
-  };
-
-  const handleCopy = async () => {
-    if (text) {
-      await writeText(text);
-      setShowCopied(true);
-      setTimeout(() => setShowCopied(false), 1500);
-    }
-  };
-
+  // Initialize store on mount
   useEffect(() => {
-    // Listen to new-memo event once
+    init();
+  }, [init]);
+
+  // Listen to new-memo event to create new note
+  useEffect(() => {
     const unlistenNewMemoPromise = listen<{ mode?: string }>(
       'new-memo',
       () => {
-        // Reload to clear state and start fresh
-        window.location.reload();
+        createNewNote();
       }
     );
-
-    // Focus textarea when window gains focus
-    const unlistenFocusPromise = appWindow.onFocusChanged(
-      ({ payload: focused }) => {
-        if (focused) {
-          focusTextarea();
-        }
-      }
-    );
-
-    // Hide window on Escape key
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        appWindow.hide();
-      }
-      // Copy all text with Cmd+C / Ctrl+C when no text is selected
-      if ((e.metaKey || e.ctrlKey) && e.key === 'c') {
-        const selection = window.getSelection()?.toString();
-        if (!selection && text) {
-          e.preventDefault();
-          handleCopy();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    focusTextarea();
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
       unlistenNewMemoPromise.then((unlisten) => unlisten());
-      unlistenFocusPromise.then((unlisten) => unlisten());
     };
-  }, [text]);
+  }, [createNewNote]);
+
+  // Listen to delete-tab event from Rust shortcut (Cmd+W)
+  useEffect(() => {
+    const unlistenDeleteTabPromise = listen(
+      'delete-tab',
+      () => {
+        if (activeId) {
+          deleteNote(activeId);
+        }
+      }
+    );
+
+    return () => {
+      unlistenDeleteTabPromise.then((unlisten) => unlisten());
+    };
+  }, [activeId, deleteNote]);
+
+  // Listen to copy-content event from Rust shortcut (Cmd+C)
+  useEffect(() => {
+    const unlistenCopyContentPromise = listen(
+      'copy-content',
+      () => {
+        // Delegate to Editor component to handle copying
+        const event = new CustomEvent('rust-copy-content');
+        window.dispatchEvent(event);
+      }
+    );
+
+    return () => {
+      unlistenCopyContentPromise.then((unlisten) => unlisten());
+    };
+  }, []);
+
+  // Open settings with Cmd+, or menu click
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault();
+        setShowSettings(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, []);
+
+  // Listen to settings menu event
+  useEffect(() => {
+    const unlistenPromise = listen('settings-menu', () => {
+      setShowSettings(true);
+    });
+
+    return () => {
+      unlistenPromise.then((unlisten) => unlisten());
+    };
+  }, []);
 
   return (
     <div className="container">
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Type your note..."
-        autoFocus
-        spellCheck={false}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            e.stopPropagation();
-            appWindow.hide();
-          }
-        }}
-      />
-
-      <div className="footer">
-        <div className="shortcuts">
-          <span className="shortcut">⌘⇧M Show</span>
-          <span className="shortcut">⌘⇧N New</span>
-          <span className="shortcut">⌘C Copy</span>
-          <span className="shortcut">Esc Close</span>
-        </div>
-        <button
-          className={`copy-button ${showCopied ? 'copied' : ''}`}
-          onClick={handleCopy}
-          disabled={!text}
-        >
-          {showCopied ? '✓ Copied' : 'Copy'}
-        </button>
-      </div>
+      <Editor />
+      <TabBar />
+      {showSettings && (
+        <Settings onClose={() => setShowSettings(false)} />
+      )}
     </div>
   );
 }

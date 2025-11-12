@@ -1,3 +1,86 @@
+/* Color palette and design tokens */
+:root {
+  /* Primary and accent colors */
+  --color-primary: #007AFF;
+  --color-primary-dark: #0051D5;
+  --color-success: #34C759;
+  --color-success-dark: #248A3D;
+  --color-error: #ff3b30;
+  --color-error-hover: #ff453a;
+
+  /* Background colors */
+  --bg-tabbar: rgba(32, 31, 31, 100);
+  --bg-icon: rgba(32, 31, 31, 100);
+  --bg-tooltip: rgba(20, 20, 20, 0.95);
+  --bg-container: rgba(255, 255, 255, 0.85);
+  --bg-header: rgba(255, 255, 255, 0.4);
+  --bg-tab-inactive: rgba(255, 255, 255, 0.6);
+
+  /* Text colors */
+  --text-primary: rgba(0, 0, 0, 0.85);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-tertiary: rgba(0, 0, 0, 0.5);
+  --text-quaternary: rgba(0, 0, 0, 0.3);
+  --text-tooltip: #f7f7f7;
+
+  /* Border colors */
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-dark: rgba(0, 0, 0, 0.1);
+
+  /* Overlay and interactive colors */
+  --overlay-subtle: rgba(0, 0, 0, 0.04);
+  --overlay-button-bg: rgba(0, 0, 0, 0.04);
+  --overlay-hover: rgba(0, 0, 0, 0.04);
+  --overlay-active: rgba(0, 0, 0, 0.08);
+  --overlay-button-close: rgba(255, 59, 48, 0.1);
+
+  /* Shadow colors */
+  --shadow-sm: rgba(0, 0, 0, 0.15);
+  --shadow-md: rgba(0, 0, 0, 0.25);
+  --shadow-lg: rgba(0, 0, 0, 0.35);
+  --shadow-tooltip: rgba(0, 0, 0, 0.35);
+
+  /* Scrollbar colors */
+  --scrollbar-default: rgba(0, 0, 0, 0.15);
+  --scrollbar-hover: rgba(0, 0, 0, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode backgrounds */
+    --bg-container: rgba(30, 30, 30, 0.85);
+    --bg-header: rgba(255, 255, 255, 0.05);
+    --bg-tooltip: rgba(40, 40, 40, 0.98);
+    --bg-tab-inactive: rgba(255, 255, 255, 0.1);
+
+    /* Dark mode text colors */
+    --text-primary: rgba(255, 255, 255, 0.9);
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-tertiary: rgba(255, 255, 255, 0.6);
+    --text-quaternary: rgba(255, 255, 255, 0.4);
+
+    /* Dark mode borders */
+    --border-light: rgba(255, 255, 255, 0.1);
+    --border-dark: rgba(255, 255, 255, 0.15);
+
+    /* Dark mode overlays */
+    --overlay-subtle: rgba(255, 255, 255, 0.08);
+    --overlay-hover: rgba(255, 255, 255, 0.08);
+    --overlay-active: rgba(255, 255, 255, 0.12);
+    --overlay-button-bg: rgba(255, 255, 255, 0.08);
+
+    /* Dark mode shadows */
+    --shadow-sm: rgba(0, 0, 0, 0.5);
+    --shadow-md: rgba(0, 0, 0, 0.5);
+    --shadow-lg: rgba(0, 0, 0, 0.5);
+    --shadow-tooltip: rgba(0, 0, 0, 0.5);
+
+    /* Dark mode scrollbar */
+    --scrollbar-default: rgba(255, 255, 255, 0.2);
+    --scrollbar-hover: rgba(255, 255, 255, 0.3);
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,15 +96,15 @@ body {
 .container {
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--bg-container);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.15),
-    0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 20px 60px var(--shadow-sm),
+    0 0 0 0.5px var(--border-light);
 }
 
 .window-drag-region {
@@ -34,14 +117,14 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.4);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-header);
+  border-bottom: 0.5px solid var(--border-light);
 }
 
 .title {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--text-secondary);
   letter-spacing: 0.3px;
 }
 
@@ -50,11 +133,11 @@ body {
   width: 24px;
   height: 24px;
   border: none;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--overlay-button-bg);
   border-radius: 6px;
   cursor: pointer;
   font-size: 18px;
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,8 +146,8 @@ body {
 }
 
 .close-button:hover {
-  background: rgba(255, 59, 48, 0.1);
-  color: #ff3b30;
+  background: var(--overlay-button-close);
+  color: var(--color-error);
 }
 
 textarea {
@@ -75,13 +158,13 @@ textarea {
   font-size: 15px;
   line-height: 1.6;
   background: transparent;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--text-primary);
   resize: none;
   font-family: inherit;
 }
 
 textarea::placeholder {
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--text-quaternary);
 }
 
 textarea::-webkit-scrollbar {
@@ -93,12 +176,12 @@ textarea::-webkit-scrollbar-track {
 }
 
 textarea::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--scrollbar-default);
   border-radius: 4px;
 }
 
 textarea::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--scrollbar-hover);
 }
 
 /* TabBar - Fixed footer with 3-section layout */
@@ -108,8 +191,8 @@ textarea::-webkit-scrollbar-thumb:hover {
   height: 3rem; /* h-12 */
   padding: 0 16px;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.6);
-  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-tabbar);
+  border-top: 0.5px solid var(--border-light);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-radius: 0 0 0 0;
@@ -144,15 +227,18 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Copy status icon */
 .copy-status-icon {
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+  background: var(--bg-icon);
+  border-radius: 6px;
+  padding: 6px;
 }
 
 .copy-status-icon.copied {
-  color: #34C759;
+  color: var(--color-success);
   animation: scaleIn 0.15s ease-out;
 }
 
@@ -190,9 +276,9 @@ textarea::-webkit-scrollbar-thumb:hover {
 
   /* Color and design */
   font-size: 13px;
-  color: #f7f7f7;
-  background: rgba(20, 20, 20, 0.95);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  color: var(--text-tooltip);
+  background: var(--bg-tooltip);
+  box-shadow: 0 10px 25px var(--shadow-tooltip);
 
   /* Animation */
   opacity: 0;
@@ -218,7 +304,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   width: 100%;
   height: 100%;
   border: none;
-  background: transparent;
+  background: var(--bg-tab-inactive);
   cursor: pointer;
   padding: 0;
   transition: all 0.15s ease;
@@ -226,7 +312,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 .tooltip-wrapper > .tab-item {
-  border-right: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-right: 0.5px solid var(--border-light);
 }
 
 .tooltip-wrapper:last-child > .tab-item {
@@ -239,13 +325,13 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Tab item hover state */
 .tab-item:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--overlay-hover);
 }
 
 /* Tab item active state */
 .tab-item.active {
-  background: rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  background: var(--overlay-active);
+  box-shadow: inset 0 0 0 0.5px var(--border-dark);
 }
 
 .footer {
@@ -253,8 +339,8 @@ textarea::-webkit-scrollbar-thumb:hover {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.4);
-  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-header);
+  border-top: 0.5px solid var(--border-light);
   gap: 12px;
 }
 
@@ -266,8 +352,8 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 .shortcut {
   font-size: 11px;
-  color: rgba(0, 0, 0, 0.5);
-  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-tertiary);
+  background: var(--overlay-button-bg);
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: 500;
@@ -277,7 +363,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 .copy-button {
   padding: 6px 16px;
   border: none;
-  background: linear-gradient(180deg, #007AFF 0%, #0051D5 100%);
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: white;
   border-radius: 6px;
   font-size: 13px;
@@ -303,89 +389,8 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 .copy-button.copied {
-  background: linear-gradient(180deg, #34C759 0%, #248A3D 100%);
+  background: linear-gradient(180deg, var(--color-success) 0%, var(--color-success-dark) 100%);
   box-shadow: 0 1px 3px rgba(52, 199, 89, 0.3);
 }
 
-/* ダークモード対応（オプション） */
-@media (prefers-color-scheme: dark) {
-  .container {
-    background: rgba(30, 30, 30, 0.85);
-    box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.5),
-      0 0 0 0.5px rgba(255, 255, 255, 0.1);
-  }
-
-  .header,
-  .footer,
-  .tab-bar {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .title {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .close-button {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.6);
-  }
-
-  .close-button:hover {
-    background: rgba(255, 59, 48, 0.2);
-    color: #ff453a;
-  }
-
-  textarea {
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  textarea::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  textarea::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .shortcut {
-    color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .tab-item {
-    border-right-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .tab-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .tab-item.active {
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.15);
-  }
-
-  .copy-status-icon {
-    color: rgba(255, 255, 255, 0.6);
-  }
-
-  .copy-status-icon.copied {
-    color: #34C759;
-  }
-
-  .tab-item[data-tooltip]::after {
-    background: rgba(40, 40, 40, 0.98);
-    color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  }
-
-  .tooltip-wrapper > .tab-item {
-    border-right-color: rgba(255, 255, 255, 0.1);
-  }
-}
+/* Dark mode is now handled via CSS variables in :root */

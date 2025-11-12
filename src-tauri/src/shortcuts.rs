@@ -29,7 +29,8 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // New memo shortcut (Cmd+Shift+N)
-    // Always shows window and emits new-memo event for React side
+    // Shows window if hidden, keeps it visible if already shown
+    // Emits new-memo event for React side to clear content and focus textarea
     {
         let app_handle = app_handle.clone();
         app_handle.global_shortcut().on_shortcut(
@@ -37,8 +38,10 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
             move |app, _shortcut, event| {
                 if event.state == ShortcutState::Pressed {
                     if let Some(window) = app.get_webview_window("main") {
-                        let _ = window.hide();
-                        let _ = window.show();
+                        let visible = window.is_visible().unwrap_or(false);
+                        if !visible {
+                            let _ = window.show();
+                        }
                         let _ = window.set_focus();
                         // Send mode for React side branching
                         let _ = window.emit("new-memo", json!({ "mode": "new" }));

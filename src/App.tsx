@@ -7,7 +7,7 @@ import { QuickSettings } from './components/QuickSettings';
 import './App.css';
 
 function App() {
-  const { init, createNewNote } = useStore();
+  const { init, createNewNote, activeId, deleteNote } = useStore();
   const [showSettings, setShowSettings] = useState(false);
 
   // Initialize store on mount
@@ -28,6 +28,22 @@ function App() {
       unlistenNewMemoPromise.then((unlisten) => unlisten());
     };
   }, [createNewNote]);
+
+  // Listen to delete-tab event from Rust shortcut (Cmd+W)
+  useEffect(() => {
+    const unlistenDeleteTabPromise = listen(
+      'delete-tab',
+      () => {
+        if (activeId) {
+          deleteNote(activeId);
+        }
+      }
+    );
+
+    return () => {
+      unlistenDeleteTabPromise.then((unlisten) => unlisten());
+    };
+  }, [activeId, deleteNote]);
 
   // Open settings with Cmd+,
   useEffect(() => {

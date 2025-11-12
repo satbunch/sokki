@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { useStore } from '../store';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 
 /**
  * Editor component for note editing.
@@ -29,7 +30,6 @@ export function Editor() {
 
     // Also focus when window gains focus
     const unlistenFocusPromise = (async () => {
-      const { getCurrentWindow } = await import('@tauri-apps/api/window');
       const appWindow = getCurrentWindow();
       return appWindow.onFocusChanged(({ payload: focused }) => {
         if (focused) {
@@ -61,7 +61,6 @@ export function Editor() {
       e.preventDefault();
       e.stopPropagation();
       (async () => {
-        const { getCurrentWindow } = await import('@tauri-apps/api/window');
         const appWindow = getCurrentWindow();
         appWindow.hide();
       })();

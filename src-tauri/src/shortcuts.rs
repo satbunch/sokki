@@ -51,5 +51,22 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
         )?;
     }
 
+    // Close/Delete tab shortcut (Cmd+W)
+    // Emits delete-tab event for React side to delete the active note
+    {
+        let app_handle = app_handle.clone();
+        app_handle.global_shortcut().on_shortcut(
+            Shortcut::new(Some(Modifiers::SUPER), Code::KeyW),
+            move |app, _shortcut, event| {
+                if event.state == ShortcutState::Pressed {
+                    if let Some(window) = app.get_webview_window("main") {
+                        // Emit event to React side to delete active tab
+                        let _ = window.emit("delete-tab", json!({}));
+                    }
+                }
+            },
+        )?;
+    }
+
     Ok(())
 }

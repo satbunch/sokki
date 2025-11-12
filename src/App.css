@@ -101,6 +101,81 @@ textarea::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.25);
 }
 
+/* TabBar - Fixed footer with 3-section layout */
+.tab-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  height: 3rem; /* h-12 */
+  padding: 0 16px;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-radius: 0 0 0 0;
+}
+
+/* Left spacer */
+.tab-spacer-left {
+  width: 3.5rem; /* w-14 */
+  flex-shrink: 0;
+}
+
+/* Center tabs area */
+.tab-center {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Right status area */
+.tab-status-right {
+  width: 3.5rem; /* w-14 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* Copy status icon */
+.copy-status-icon {
+  color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+/* Tab item button */
+.tab-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem; /* h-9 */
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-right: 0.5px solid rgba(0, 0, 0, 0.08);
+  padding: 0;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.tab-item:last-child {
+  border-right: none;
+}
+
+/* Tab item hover state */
+.tab-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Tab item active state */
+.tab-item.active {
+  background: rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -164,13 +239,14 @@ textarea::-webkit-scrollbar-thumb:hover {
 @media (prefers-color-scheme: dark) {
   .container {
     background: rgba(30, 30, 30, 0.85);
-    box-shadow: 
+    box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.5),
       0 0 0 0.5px rgba(255, 255, 255, 0.1);
   }
 
   .header,
-  .footer {
+  .footer,
+  .tab-bar {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
   }
@@ -208,5 +284,22 @@ textarea::-webkit-scrollbar-thumb:hover {
   .shortcut {
     color: rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 0.08);
+  }
+
+  .tab-item {
+    border-right-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .tab-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .tab-item.active {
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.15);
+  }
+
+  .copy-status-icon {
+    color: rgba(255, 255, 255, 0.6);
   }
 }

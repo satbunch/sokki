@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { useStore } from '../store';
 
 /**
@@ -6,7 +7,7 @@ import { useStore } from '../store';
  * Automatically syncs with active note, handles focus, and saves on change.
  */
 export function Editor() {
-  const { activeNote, upsertNoteContent } = useStore();
+  const { activeNote, upsertNoteContent, setCopyStatus } = useStore();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const note = activeNote();
@@ -52,9 +53,10 @@ export function Editor() {
   };
 
   /**
-   * Handle Escape key to hide window
+   * Handle keyboard shortcuts
    */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Escape key to hide window
     if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();
@@ -63,6 +65,18 @@ export function Editor() {
         const appWindow = getCurrentWindow();
         appWindow.hide();
       })();
+    }
+
+    // Cmd+C / Ctrl+C to copy all text when no selection
+    if ((e.metaKey || e.ctrlKey) && e.key === 'c') {
+      const selection = window.getSelection()?.toString();
+      if (!selection && content) {
+        e.preventDefault();
+        writeText(content);
+        // Show copied status briefly
+        setCopyStatus('copied');
+        setTimeout(() => setCopyStatus('idle'), 1500);
+      }
     }
   };
 

@@ -143,7 +143,23 @@ textarea::-webkit-scrollbar-thumb:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
+}
+
+.copy-status-icon.copied {
+  color: #34C759;
+  animation: scaleIn 0.15s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Tab item button */
@@ -301,5 +317,9 @@ textarea::-webkit-scrollbar-thumb:hover {
 
   .copy-status-icon {
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  .copy-status-icon.copied {
+    color: #34C759;
   }
 }

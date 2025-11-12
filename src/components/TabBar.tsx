@@ -22,8 +22,28 @@ function ClipboardIcon() {
   );
 }
 
+/**
+ * Check icon SVG component
+ */
+function CheckIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  );
+}
+
 export function TabBar() {
-  const { notes, activeId, setActive, deleteNote } = useStore();
+  const { notes, activeId, setActive, deleteNote, copyStatus } = useStore();
   const n = notes.length;
 
   const handleTabClick = (id: string) => {
@@ -60,8 +80,8 @@ export function TabBar() {
 
       {/* Right Status */}
       <div className="tab-status-right">
-        <div className="copy-status-icon">
-          <ClipboardIcon />
+        <div className={`copy-status-icon ${copyStatus === 'copied' ? 'copied' : ''}`}>
+          {copyStatus === 'copied' ? <CheckIcon /> : <ClipboardIcon />}
         </div>
       </div>
     </div>

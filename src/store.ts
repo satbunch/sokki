@@ -12,6 +12,9 @@ import type { AppStateShape, Note, NoteId, IsoDate } from './types';
  * Store state and action types.
  */
 interface Store extends AppStateShape {
+  // Transient state (not persisted)
+  copyStatus: 'idle' | 'copied';
+
   // Selectors
   activeNote: () => Note | null;
 
@@ -22,6 +25,7 @@ interface Store extends AppStateShape {
   createNewNote: () => void;
   deleteNote: (id: NoteId) => void;
   setMaxTabs: (n: number) => void;
+  setCopyStatus: (status: 'idle' | 'copied') => void;
 }
 
 /**
@@ -68,6 +72,7 @@ export const useStore = create<Store>((set, get) => ({
   notes: [],
   activeId: null,
   settings: { maxTabs: 10 },
+  copyStatus: 'idle',
 
   // Selector: Get currently active note
   activeNote: () => {
@@ -211,5 +216,10 @@ export const useStore = create<Store>((set, get) => ({
 
       return newState;
     });
+  },
+
+  // Action: Set copy status (transient state)
+  setCopyStatus: (status: 'idle' | 'copied') => {
+    set({ copyStatus: status });
   },
 }));

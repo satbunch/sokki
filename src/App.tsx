@@ -45,6 +45,22 @@ function App() {
     };
   }, [activeId, deleteNote]);
 
+  // Listen to copy-content event from Rust shortcut (Cmd+C)
+  useEffect(() => {
+    const unlistenCopyContentPromise = listen(
+      'copy-content',
+      () => {
+        // Delegate to Editor component to handle copying
+        const event = new CustomEvent('rust-copy-content');
+        window.dispatchEvent(event);
+      }
+    );
+
+    return () => {
+      unlistenCopyContentPromise.then((unlisten) => unlisten());
+    };
+  }, []);
+
   // Open settings with Cmd+,
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {

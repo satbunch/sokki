@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { useStore } from '../store';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 
 /**
  * Editor component for note editing.
@@ -27,21 +26,24 @@ export function Editor() {
     };
 
     focusEditor();
-
-    // Also focus when window gains focus
-    const unlistenFocusPromise = (async () => {
-      const appWindow = getCurrentWindow();
-      return appWindow.onFocusChanged(({ payload: focused }) => {
-        if (focused) {
-          focusEditor();
-        }
-      });
-    })();
-
-    return () => {
-      unlistenFocusPromise.then((unlisten) => unlisten());
-    };
   }, [note?.id]);
+
+  /**
+   * Listen to copy-content event from Rust shortcut (Cmd+C)
+   */
+  useEffect(() => {
+    const handleRustCopyContent = () => {
+      if (content) {
+        writeText(content);
+        // Show copied status briefly
+        setCopyStatus('copied');
+        setTimeout(() => setCopyStatus('idle'), 1500);
+      }
+    };
+
+    window.addEventListener('rust-copy-content', handleRustCopyContent);
+    return () => window.removeEventListener('rust-copy-content', handleRustCopyContent);
+  }, [content, setCopyStatus]);
 
   /**
    * Handle text change - save to store immediately
@@ -53,38 +55,15 @@ export function Editor() {
   };
 
   /**
-   * Handle keyboard shortcuts
+   * No keyboard shortcuts needed here - all handled by Rust side
+   * Editor only focuses on text editing
    */
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Escape key to hide window
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      e.stopPropagation();
-      (async () => {
-        const appWindow = getCurrentWindow();
-        appWindow.hide();
-      })();
-    }
-
-    // Cmd+C / Ctrl+C to copy all text when no selection
-    if ((e.metaKey || e.ctrlKey) && e.key === 'c') {
-      const selection = window.getSelection()?.toString();
-      if (!selection && content) {
-        e.preventDefault();
-        writeText(content);
-        // Show copied status briefly
-        setCopyStatus('copied');
-        setTimeout(() => setCopyStatus('idle'), 1500);
-      }
-    }
-  };
 
   return (
     <textarea
       ref={textareaRef}
       value={content}
       onChange={handleChange}
-      onKeyDown={handleKeyDown}
       placeholder="Type instantly…"
       autoFocus
       spellCheck={false}

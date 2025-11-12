@@ -68,5 +68,37 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
         )?;
     }
 
+    // Hide window shortcut (Escape)
+    {
+        let app_handle = app_handle.clone();
+        app_handle.global_shortcut().on_shortcut(
+            Shortcut::new(None, Code::Escape),
+            move |app, _shortcut, event| {
+                if event.state == ShortcutState::Pressed {
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.hide();
+                    }
+                }
+            },
+        )?;
+    }
+
+    // Copy content shortcut (Cmd+C)
+    // Emits copy-content event for React side to copy active note content
+    {
+        let app_handle = app_handle.clone();
+        app_handle.global_shortcut().on_shortcut(
+            Shortcut::new(Some(Modifiers::SUPER), Code::KeyC),
+            move |app, _shortcut, event| {
+                if event.state == ShortcutState::Pressed {
+                    if let Some(window) = app.get_webview_window("main") {
+                        // Emit event to React side to copy active note content
+                        let _ = window.emit("copy-content", json!({}));
+                    }
+                }
+            },
+        )?;
+    }
+
     Ok(())
 }

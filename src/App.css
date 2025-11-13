@@ -252,7 +252,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 .tab-bar {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  height: 3rem; /* h-12 */
+  height: 2.25rem; /* Compact height aligned with icon size */
   padding: 0 16px;
   gap: 12px;
   background: var(--bg-tabbar);
@@ -279,7 +279,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Left spacer */
 .tab-spacer-left {
-  width: 2rem; /* Narrowed for compact layout */
+  width: 1.5rem; /* Compact width aligned with icon */
   flex-shrink: 0;
 }
 
@@ -293,7 +293,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Right status area */
 .tab-status-right {
-  width: 2.5rem; /* Narrowed to fit clipboard icon */
+  width: 1.5rem; /* Compact width aligned with icon */
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -309,7 +309,6 @@ textarea::-webkit-scrollbar-thumb:hover {
   transition: all 0.15s ease;
   background: var(--bg-icon);
   border-radius: 6px;
-  padding: 6px;
 }
 
 .copy-status-icon.copied {
@@ -380,11 +379,13 @@ textarea::-webkit-scrollbar-thumb:hover {
   height: 100%;
   border: none;
   border-right: 0.5px solid var(--border-light);
+  border-top: 0.5px solid var(--border-light);
   background: var(--bg-tab-inactive);
   cursor: pointer;
   padding: 0;
   transition: all 0.15s ease;
   outline: none;
+  border-radius: 0 0 0 8px;
 }
 
 .tab-item:last-child {
@@ -396,10 +397,16 @@ textarea::-webkit-scrollbar-thumb:hover {
   background: var(--overlay-hover);
 }
 
-/* Tab item active state */
+/* Tab item active state - connects to editor */
 .tab-item.active {
-  background: var(--overlay-active);
-  box-shadow: inset 0 0 0 0.5px var(--border-dark);
+  background: transparent;
+  box-shadow: none;
+  border-right: none;
+  border-top: none;
+  /* Extend upward to cover tab-bar's top border */
+  position: relative;
+  margin-top: -0.5px;
+  padding-top: 0.5px;
 }
 
 .footer {

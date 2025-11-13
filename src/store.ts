@@ -166,12 +166,25 @@ export const useStore = create<Store>((set, get) => ({
   // Action: Delete note by ID
   deleteNote: (id: NoteId) => {
     set((state) => {
-      const notes = state.notes.filter((note) => note.id !== id);
+      let notes = state.notes.filter((note) => note.id !== id);
       let activeId = state.activeId;
 
-      // If deleted note was active, activate first note or null
+      // If deleted note was active, activate first note
       if (activeId === id) {
         activeId = notes.length > 0 ? notes[0].id : null;
+      }
+
+      // If no notes remain, create a new empty note to ensure at least one tab exists
+      if (notes.length === 0) {
+        const newNote: Note = {
+          id: generateNoteId(),
+          content: '',
+          preview: '',
+          createdAt: now(),
+          updatedAt: now(),
+        };
+        notes = [newNote];
+        activeId = newNote.id;
       }
 
       const newState: AppStateShape = {

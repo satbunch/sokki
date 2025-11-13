@@ -25,6 +25,7 @@ interface Store extends AppStateShape {
   createNewNote: () => void;
   deleteNote: (id: NoteId) => void;
   setMaxTabs: (n: number) => void;
+  setOpacity: (opacity: number) => void;
   setCopyStatus: (status: 'idle' | 'copied') => void;
 }
 
@@ -71,7 +72,7 @@ export const useStore = create<Store>((set, get) => ({
   // Initial state
   notes: [],
   activeId: null,
-  settings: { maxTabs: 10 },
+  settings: { maxTabs: 10, opacity: 80 },
   copyStatus: 'idle',
 
   // Selector: Get currently active note
@@ -208,7 +209,25 @@ export const useStore = create<Store>((set, get) => ({
         ...state,
         notes,
         activeId,
-        settings: { maxTabs },
+        settings: { ...state.settings, maxTabs },
+      };
+
+      // Save to repository
+      debouncedSaveAll(newState);
+
+      return newState;
+    });
+  },
+
+  // Action: Set window opacity level
+  setOpacity: (opacity: number) => {
+    set((state) => {
+      // Clamp to valid range [0, 100]
+      const clampedOpacity = Math.max(0, Math.min(100, Math.round(opacity)));
+
+      const newState: AppStateShape = {
+        ...state,
+        settings: { ...state.settings, opacity: clampedOpacity },
       };
 
       // Save to repository

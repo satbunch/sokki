@@ -42,18 +42,21 @@ function validateNote(note: unknown): Note | null {
 /**
  * Validates and normalizes Settings object.
  * Clamps maxTabs to valid range [3, 30], defaults to 10 if invalid.
+ * Clamps opacity to valid range [0, 100], defaults to 80 if invalid.
  */
 function validateSettings(settings: unknown): Settings {
   if (typeof settings !== 'object' || settings === null) {
-    return { maxTabs: 10 };
+    return { maxTabs: 10, opacity: 80 };
   }
 
   const s = settings as Record<string, unknown>;
   const maxTabs = typeof s.maxTabs === 'number' ? s.maxTabs : 10;
+  const opacity = typeof s.opacity === 'number' ? s.opacity : 80;
 
-  // Clamp to valid range [3, 30]
+  // Clamp to valid range [3, 30] for maxTabs and [0, 100] for opacity
   return {
     maxTabs: Math.max(3, Math.min(30, Math.round(maxTabs))),
+    opacity: Math.max(0, Math.min(100, Math.round(opacity))),
   };
 }
 
@@ -66,7 +69,7 @@ function validateAppState(state: unknown): AppStateShape {
     return {
       notes: [],
       activeId: null,
-      settings: { maxTabs: 10 },
+      settings: { maxTabs: 10, opacity: 80 },
     };
   }
 
@@ -111,7 +114,7 @@ export const repo = {
         return {
           notes: [],
           activeId: null,
-          settings: { maxTabs: 10 },
+          settings: { maxTabs: 10, opacity: 80 },
         };
       }
 
@@ -123,7 +126,7 @@ export const repo = {
       return {
         notes: [],
         activeId: null,
-        settings: { maxTabs: 10 },
+        settings: { maxTabs: 10, opacity: 80 },
       };
     }
   },

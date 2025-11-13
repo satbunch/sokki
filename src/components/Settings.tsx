@@ -9,21 +9,29 @@ interface SettingsProps {
 export function Settings({ onClose }: SettingsProps) {
   const { settings } = useStore();
   const setMaxTabs = useStore((state) => state.setMaxTabs);
+  const setOpacity = useStore((state) => state.setOpacity);
   const { preference, setPreference } = useTheme();
   const [maxTabs, setMaxTabsLocal] = useState(settings.maxTabs);
+  const [opacity, setOpacityLocal] = useState(settings.opacity);
   const [themePreference, setThemePreferenceLocal] = useState(preference);
 
   const handleSave = () => {
     setMaxTabs(maxTabs);
+    setOpacity(opacity);
     setPreference(themePreference);
     onClose?.();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMaxTabsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
     if (!isNaN(value)) {
       setMaxTabsLocal(value);
     }
+  };
+
+  const handleOpacityChange = (value: number) => {
+    const clamped = Math.max(0, Math.min(100, Math.round(value)));
+    setOpacityLocal(clamped);
   };
 
   return (
@@ -39,10 +47,35 @@ export function Settings({ onClose }: SettingsProps) {
             min="3"
             max="30"
             value={maxTabs}
-            onChange={handleChange}
+            onChange={handleMaxTabsChange}
             className="settings-input"
           />
           <span className="settings-hint">(3 to 30)</span>
+        </div>
+
+        <div className="settings-item">
+          <label htmlFor="opacity-slider">Window Opacity:</label>
+          <div className="opacity-control">
+            <input
+              id="opacity-slider"
+              type="range"
+              min="0"
+              max="100"
+              value={opacity}
+              onChange={(e) => handleOpacityChange(parseInt(e.target.value, 10))}
+              className="settings-slider"
+            />
+            <input
+              id="opacity-input"
+              type="number"
+              min="0"
+              max="100"
+              value={opacity}
+              onChange={(e) => handleOpacityChange(parseInt(e.target.value, 10))}
+              className="settings-input opacity-input"
+            />
+            <span className="opacity-unit">%</span>
+          </div>
         </div>
 
         <div className="settings-item">

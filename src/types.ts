@@ -33,6 +33,10 @@ export type Settings = {
    * Maximum number of tabs allowed (3..30)
    */
   maxTabs: number;
+  /**
+   * Window opacity level (0..100)
+   */
+  opacity: number;
 };
 
 /**

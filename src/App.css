@@ -155,6 +155,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: opacity 300ms ease;
 }
 
 .container {
@@ -168,18 +169,6 @@ body {
     0 20px 60px var(--shadow-sm),
     0 0 0 0.5px var(--border-light);
   transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
-}
-
-/* Light theme glassmorphism effect */
-:root[data-theme="light"] .container {
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-}
-
-/* Dark theme matte effect (no blur) */
-:root[data-theme="dark"] .container {
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
 }
 
 .window-drag-region {
@@ -608,4 +597,68 @@ textarea::-webkit-scrollbar-thumb:hover {
 .theme-option span {
   font-size: 13px;
   color: var(--text-primary);
+}
+
+/* Opacity slider control */
+.opacity-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-slider {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(90deg, var(--overlay-disabled), var(--overlay-active));
+  cursor: pointer;
+}
+
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+  transition: all 0.15s ease;
+}
+
+.settings-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+}
+
+.settings-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+  transition: all 0.15s ease;
+}
+
+.settings-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+}
+
+.opacity-input {
+  width: 50px;
+  padding: 6px 8px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.opacity-unit {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
 }

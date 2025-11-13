@@ -20,7 +20,7 @@
         "minHeight": 300,
         "center": true,
         "decorations": true,
-        "transparent": false,
+        "transparent": true,
         "visible": false,
         "resizable": true,
         "maximizable": false

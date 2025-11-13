@@ -219,6 +219,7 @@ textarea {
   border: none;
   outline: none;
   padding: 20px;
+  margin-bottom: 2px;
   font-size: 15px;
   line-height: 1.6;
   background: transparent;

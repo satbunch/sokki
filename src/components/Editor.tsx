@@ -1,13 +1,13 @@
 import { useRef, useEffect } from 'react';
-import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { useStore } from '../store';
+import { setupKeyboardShortcuts, copyContent } from '../lib/commands/app-commands';
 
 /**
  * Editor component for note editing.
  * Automatically syncs with active note, handles focus, and saves on change.
  */
 export function Editor() {
-  const { activeNote, upsertNoteContent, setCopyStatus } = useStore();
+  const { activeNote, upsertNoteContent, setCopyStatus, createNewNote, activeId, deleteNote } = useStore();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const note = activeNote();
@@ -29,21 +29,55 @@ export function Editor() {
   }, [note?.id]);
 
   /**
-   * Listen to copy-content event from Rust shortcut (Cmd+C)
+   * Handle copy action - triggered by menu or keyboard shortcut (Cmd+C)
+   */
+  const handleCopyContent = async () => {
+    if (content) {
+      await copyContent(content);
+      // Show copied status briefly
+      setCopyStatus('copied');
+      setTimeout(() => setCopyStatus('idle'), 1500);
+    }
+  };
+
+  /**
+   * Handle new memo action - triggered by menu or keyboard shortcut (Cmd+Shift+N)
+   */
+  const handleNewMemo = () => {
+    createNewNote();
+  };
+
+  /**
+   * Handle delete tab action - triggered by menu or keyboard shortcut (Cmd+W)
+   */
+  const handleDeleteTab = () => {
+    if (activeId) {
+      deleteNote(activeId);
+    }
+  };
+
+  /**
+   * Set up keyboard shortcuts (Cmd+C, Cmd+Shift+N, Cmd+W, Esc)
    */
   useEffect(() => {
-    const handleRustCopyContent = () => {
-      if (content) {
-        writeText(content);
-        // Show copied status briefly
-        setCopyStatus('copied');
-        setTimeout(() => setCopyStatus('idle'), 1500);
-      }
+    const setupShortcuts = async () => {
+      const unlisteners = await setupKeyboardShortcuts({
+        onCopyContent: handleCopyContent,
+        onNewMemo: handleNewMemo,
+        onDeleteTab: handleDeleteTab,
+      });
+
+      return () => {
+        unlisteners.forEach((unlisten) => unlisten());
+      };
     };
 
-    window.addEventListener('rust-copy-content', handleRustCopyContent);
-    return () => window.removeEventListener('rust-copy-content', handleRustCopyContent);
-  }, [content, setCopyStatus]);
+    const cleanupPromise = setupShortcuts();
+
+    return () => {
+      cleanupPromise.then((cleanup) => cleanup?.());
+    };
+  }, [content, setCopyStatus, createNewNote, activeId, deleteNote]);
 
   /**
    * Handle text change - save to store immediately
@@ -53,11 +87,6 @@ export function Editor() {
       upsertNoteContent(note.id, e.target.value);
     }
   };
-
-  /**
-   * No keyboard shortcuts needed here - all handled by Rust side
-   * Editor only focuses on text editing
-   */
 
   return (
     <textarea

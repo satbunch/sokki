@@ -26,11 +26,11 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
         "File",
         true,
         &[
-            &MenuItem::with_id(app, "new_window", "New Window", true, Some("Cmd+Shift+N"))?,
+            &MenuItem::with_id(app, "new_tab", "New Tab", true, Some("Cmd+N"))?,
             &PredefinedMenuItem::separator(app)?,
-            &MenuItem::with_id(app, "open_window", "Open Window", true, Some("Cmd+Shift+M"))?,
+            &MenuItem::with_id(app, "close_tab", "Close Tab", true, Some("Cmd+W"))?,
             &PredefinedMenuItem::separator(app)?,
-            &MenuItem::with_id(app, "close_window", "Close Window", true, Some("Esc"))?,
+            &MenuItem::with_id(app, "open_window", "Show Window", true, Some("Cmd+Shift+M"))?,
         ],
     )?;
 
@@ -59,6 +59,18 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
             "settings" => {
                 // Emit settings-menu event to React
                 let _ = app_handle.emit("settings-menu", ());
+            }
+            "copy" => {
+                // Emit copy-content event to React when Copy menu item is clicked
+                let _ = app_handle.emit("copy-content", ());
+            }
+            "new_tab" => {
+                // Emit new-tab event to React when New Tab menu item is clicked
+                let _ = app_handle.emit("new-tab", ());
+            }
+            "close_tab" => {
+                // Emit delete-tab event to React when Close Tab menu item is clicked
+                let _ = app_handle.emit("delete-tab", ());
             }
             _ => {}
         }

@@ -268,8 +268,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   background: var(--bg-tabbar);
   border-radius: 0 0 0 0;
   margin: 0;
-  position: relative;
-  z-index: 1000;
+  z-index: 100;
   overflow: visible;
   transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
 }
@@ -341,9 +340,10 @@ textarea::-webkit-scrollbar-thumb:hover {
   content: attr(data-tooltip);
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 12px);
+  bottom: 100%;
   transform: translateX(-50%);
   display: block;
+  margin-bottom: 12px;
 
   /* Display settings */
   white-space: pre;
@@ -368,7 +368,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 120ms ease, transform 120ms ease;
-  z-index: 1001;
+  z-index: 9999;
 }
 
 .tab-item[data-tooltip]:hover::after,
@@ -398,7 +398,6 @@ textarea::-webkit-scrollbar-thumb:hover {
   font-size: 13px;
   color: var(--text-secondary);
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 

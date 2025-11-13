@@ -43,6 +43,9 @@
   /* Scrollbar colors */
   --scrollbar-default: rgba(0, 0, 0, 0.15);
   --scrollbar-hover: rgba(0, 0, 0, 0.25);
+
+  /* Editor background */
+  --bg-editor: rgba(255, 255, 255, 0.9);
 }
 
 /* Light theme overrides (Glassmorphism) */
@@ -106,6 +109,9 @@
   /* Dark mode scrollbar */
   --scrollbar-default: rgba(255, 255, 255, 0.2);
   --scrollbar-hover: rgba(255, 255, 255, 0.3);
+
+  /* Dark mode editor background */
+  --bg-editor: rgba(29, 29, 36, 1);
 }
 
 /* prefers-color-scheme dark fallback (for browsers that don't support data-theme) */
@@ -142,6 +148,9 @@
     /* Dark mode scrollbar */
     --scrollbar-default: rgba(255, 255, 255, 0.2);
     --scrollbar-hover: rgba(255, 255, 255, 0.3);
+
+    /* Dark mode editor background */
+    --bg-editor: rgba(29, 29, 36, 1);
   }
 }
 
@@ -216,16 +225,16 @@ body {
 
 textarea {
   flex: 1;
-  border: none;
   outline: none;
   padding: 20px;
-  margin-bottom: 2px;
   font-size: 15px;
   line-height: 1.6;
-  background: transparent;
+  background: var(--bg-editor);
   color: var(--text-primary);
   resize: none;
   font-family: inherit;
+  border: none;
+  border-bottom: 2px solid var(--bg-editor);
 }
 
 textarea::placeholder {
@@ -253,11 +262,10 @@ textarea::-webkit-scrollbar-thumb:hover {
 .tab-bar {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  height: 2.25rem; /* Compact height aligned with icon size */
+  height: 2.5rem; /* Increased height for better tab visibility */
   padding: 0 16px;
   gap: 12px;
   background: var(--bg-tabbar);
-  border-top: 0.5px solid var(--border-light);
   border-radius: 0 0 0 0;
   margin: 0;
   position: relative;
@@ -379,35 +387,34 @@ textarea::-webkit-scrollbar-thumb:hover {
   width: 100%;
   height: 100%;
   border: none;
-  border-right: 0.5px solid var(--border-light);
-  border-top: 0.5px solid var(--border-light);
-  background: var(--bg-tab-inactive);
+  background: rgba(50, 50, 50, 0.7);
   cursor: pointer;
-  padding: 0;
+  padding: 0 10px 12px 10px;
   transition: all 0.15s ease;
   outline: none;
-  border-radius: 0 0 0 8px;
-}
-
-.tab-item:last-child {
-  border-right: none;
+  /* Rounded corners at bottom and sides, straight at top */
+  border-radius: 0 0 12px 12px;
+  margin: 0 2px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Tab item hover state */
 .tab-item:hover {
-  background: var(--overlay-hover);
+  background: rgba(70, 70, 70, 0.8);
+  color: var(--text-primary);
 }
 
-/* Tab item active state - connects to editor */
+/* Tab item active state - connects to editor with downward extension */
 .tab-item.active {
-  background: transparent;
-  box-shadow: none;
-  border-right: none;
-  border-top: none;
-  /* Extend upward to cover tab-bar's top border */
+  background: var(--bg-editor);
+  color: var(--text-primary);
+  /* Extend downward below the tab bar */
   position: relative;
-  margin-top: -0.5px;
-  padding-top: 0.5px;
+  z-index: 1001;
 }
 
 .footer {

@@ -70,6 +70,7 @@ npm install
   - ウィンドウフォーカス検知 (`onFocusChanged`) でフォーカス時に textarea にフォーカス
   - キーボードイベント処理 (Esc で閉じる、⌘+C でコピー)
 - **src/App.css**: グラスモーフィズム UI スタイル定義
+  - CSS 変数で色・影・背景を一元管理（下記参照）
 
 ### バックエンド構造 (Rust)
 
@@ -112,6 +113,61 @@ npm install
 1. ウィンドウがフォーカスを取得
 2. `onFocusChanged` イベントが発火
 3. `textareaRef` または `querySelector` でテキストエリアにフォーカス
+
+## スタイル管理
+
+### CSS 変数の一元管理
+
+**src/App.css** では CSS カスタムプロパティで色・影・背景を一元管理しています。テーマ変更やスタイル修正時は、以下の構造に従ってください：
+
+#### CSS 変数の定義階層
+
+1. **`:root`（デフォルト / ライトテーマ）**
+   - 基本色: `--color-primary`, `--color-success`, `--color-error`
+   - 背景: `--bg-container`, `--bg-header`, `--bg-tabbar`, `--bg-editor`
+   - テキスト: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-quaternary`
+   - その他: `--border-light`, `--shadow-md`, `--scrollbar-default`
+
+2. **`:root[data-theme="light"]`**
+   - ライトテーマ専用の上書き（同じ変数名で値を上書き）
+
+3. **`:root[data-theme="dark"]`**
+   - ダークテーマ（`--bg-editor: rgba(29, 29, 36, 1)` など）
+
+4. **`@media (prefers-color-scheme: dark)`**
+   - ブラウザのシステム設定フォールバック（`data-theme` が未指定時）
+
+#### 例：新しい色を追加する場合
+
+```css
+/* :root に定義 */
+:root {
+  --new-color: rgba(100, 150, 200, 0.8);
+}
+
+/* ライトテーマで異なる色を使う場合 */
+:root[data-theme="light"] {
+  --new-color: rgba(50, 100, 200, 0.9);
+}
+
+/* ダークテーマ */
+:root[data-theme="dark"] {
+  --new-color: rgba(150, 180, 220, 0.7);
+}
+
+/* フォールバック */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --new-color: rgba(150, 180, 220, 0.7);
+  }
+}
+```
+
+#### 色の使用規則
+
+- **直書き禁止**: `background: rgba(50, 50, 50);` ❌
+- **変数使用推奨**: `background: var(--bg-tabbar);` ✅
+- テーマ依存性が高い色（背景、テキスト）は必ず CSS 変数を使う
 
 ## カスタマイズ
 

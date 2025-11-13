@@ -383,28 +383,29 @@ textarea::-webkit-scrollbar-thumb:hover {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 6px;
   width: 100%;
-  height: 100%;
+  height: 80%;
   border: none;
-  background: rgba(50, 50, 50, 0.7);
+  background: transparent;
   cursor: pointer;
-  padding: 0 10px 12px 10px;
+  padding: 0 10px 12px 8px;
   transition: all 0.15s ease;
   outline: none;
   /* Rounded corners at bottom and sides, straight at top */
   border-radius: 0 0 12px 12px;
   margin: 0 2px;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 /* Tab item hover state */
 .tab-item:hover {
-  background: rgba(70, 70, 70, 0.8);
-  color: var(--text-primary);
+  background: transparent;
+  color: var(--text-secondary);
 }
 
 /* Tab item active state - connects to editor with downward extension */

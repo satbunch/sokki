@@ -1,4 +1,4 @@
-import { useStore } from '../store';
+import { useStore } from '../services/store';
 import { TabItem } from './TabItem';
 import { Clipboard, Check } from 'lucide-react';
 

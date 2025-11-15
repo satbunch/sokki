@@ -4,9 +4,9 @@
  */
 
 import { create } from 'zustand';
-import { debounce } from './utils/debounce';
+import { debounce } from '../utils/debounce';
 import { repo } from './repo';
-import type { AppStateShape, Note, NoteId, IsoDate } from './types';
+import type { AppStateShape, Note, NoteId, IsoDate } from '../types';
 
 /**
  * Store state and action types.

@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { useStore } from '../store';
+import { useStore } from '../services/store';
 import { setupKeyboardShortcuts, copyContent } from '../lib/commands/app-commands';
 
 /**

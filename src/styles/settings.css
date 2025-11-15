@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-modal-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +57,7 @@
 
 .settings-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--focus-primary);
 }
 
 .settings-hint {
@@ -85,12 +85,12 @@
 .settings-button-primary {
   background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: white;
-  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 1px 3px var(--shadow-primary-sm);
 }
 
 .settings-button-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+  box-shadow: 0 2px 6px var(--shadow-primary-md);
 }
 
 .settings-button-primary:active {
@@ -163,13 +163,13 @@
   border-radius: 50%;
   background: var(--color-primary);
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 1px 3px var(--shadow-primary-sm);
   transition: all 0.15s ease;
 }
 
 .settings-slider::-webkit-slider-thumb:hover {
   transform: scale(1.1);
-  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+  box-shadow: 0 2px 6px var(--shadow-primary-md);
 }
 
 .settings-slider::-moz-range-thumb {
@@ -179,13 +179,13 @@
   background: var(--color-primary);
   cursor: pointer;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 1px 3px var(--shadow-primary-sm);
   transition: all 0.15s ease;
 }
 
 .settings-slider::-moz-range-thumb:hover {
   transform: scale(1.1);
-  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+  box-shadow: 0 2px 6px var(--shadow-primary-md);
 }
 
 .opacity-input {

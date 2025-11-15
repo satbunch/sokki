@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { useStore } from "./store";
+import { useStore } from "./services/store";
 import { ThemeProvider } from "./theme/ThemeContext";
 import "./theme/tokens.css";
 

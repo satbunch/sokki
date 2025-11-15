@@ -63,14 +63,55 @@ npm install
 
 ### フロントエンド構造
 
-- **src/main.tsx**: React エントリーポイント
+```
+src/
+├── main.tsx                    # React エントリーポイント
+├── App.tsx                     # メインコンポーネント
+├── components/                 # UI コンポーネント
+│   ├── Editor.tsx             # テキストエディタ
+│   ├── TabBar.tsx             # タブバー
+│   ├── TabItem.tsx            # タブアイテム
+│   ├── Settings.tsx           # 設定パネル
+│   └── ...
+├── services/                   # ビジネスロジック層
+│   ├── store.ts               # Zustand ストア (状態管理)
+│   └── repo.ts                # リポジトリ (永続化層)
+├── types/                      # 型定義
+│   └── index.ts               # ドメイン型
+├── lib/                        # ライブラリ層
+│   └── commands/              # Tauri コマンド
+├── utils/                      # ユーティリティ関数
+├── styles/                     # CSS ファイル
+│   ├── colors.css             # 色・テーマ変数
+│   ├── components.css         # コンポーネント用スタイル
+│   ├── settings.css           # 設定パネルスタイル
+│   └── ...
+└── theme/                      # テーマ管理
+    ├── ThemeContext.tsx       # テーマプロバイダ
+    └── tokens.css             # テーマトークン
+```
+
+#### 主要ファイル説明
+
+- **src/main.tsx**: React エントリーポイント、ストア初期化
 - **src/App.tsx**: メインコンポーネント
-  - テキストエリアの状態管理 (`useState`) と ref ベースのフォーカス管理
+  - テキストエリアの状態管理と ref ベースのフォーカス管理
   - グローバルショートカットとの連携 (`listen('new-memo')`) - mode パラメータ対応
   - ウィンドウフォーカス検知 (`onFocusChanged`) でフォーカス時に textarea にフォーカス
   - キーボードイベント処理 (Esc で閉じる、⌘+C でコピー)
-- **src/App.css**: グラスモーフィズム UI スタイル定義
-  - CSS 変数で色・影・背景を一元管理（下記参照）
+
+- **src/services/store.ts**: Zustand による状態管理
+  - `useStore`: グローバルストア (notes, activeId, settings など)
+  - 状態の変更は自動的にリポジトリレイヤーで永続化
+
+- **src/services/repo.ts**: リポジトリ層（永続化の抽象化）
+  - `repo.loadAll()`: localStorage からの読み込み
+  - `repo.saveAll(state)`: localStorage への保存
+
+- **src/types/index.ts**: ドメイン型定義
+  - `Note`: メモデータ型
+  - `AppStateShape`: アプリケーションの状態形
+  - `NoteId`, `IsoDate`: ブランド型
 
 ### バックエンド構造 (Rust)
 
@@ -116,17 +157,33 @@ npm install
 
 ## スタイル管理
 
+### CSS ファイル構造
+
+```
+src/styles/
+├── colors.css              # 色・テーマ変数（一元管理）
+├── components.css          # コンポーネントスタイル
+├── settings.css            # 設定パネルスタイル
+├── base.css                # 基本スタイル
+├── layout.css              # レイアウト
+└── ...
+```
+
 ### CSS 変数の一元管理
 
-**src/App.css** では CSS カスタムプロパティで色・影・背景を一元管理しています。テーマ変更やスタイル修正時は、以下の構造に従ってください：
+**src/styles/colors.css** で色・シャドウ・背景をすべて一元管理しています。テーマ変更やスタイル修正時は、必ず colors.css の変数を使用してください。
 
 #### CSS 変数の定義階層
 
 1. **`:root`（デフォルト / ライトテーマ）**
-   - 基本色: `--color-primary`, `--color-success`, `--color-error`
-   - 背景: `--bg-container`, `--bg-header`, `--bg-tabbar`, `--bg-editor`
-   - テキスト: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-quaternary`
-   - その他: `--border-light`, `--shadow-md`, `--scrollbar-default`
+   - **基本色**: `--color-primary`, `--color-success`, `--color-error`
+   - **背景**: `--bg-container`, `--bg-header`, `--bg-tabbar`, `--bg-editor`, `--bg-icon`
+   - **テキスト**: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-quaternary`, `--text-tooltip`
+   - **ボーダー**: `--border-light`, `--border-dark`
+   - **オーバーレイ**: `--overlay-subtle`, `--overlay-button-bg`, `--overlay-hover`, `--overlay-active`, `--overlay-disabled`, `--overlay-modal-bg`
+   - **シャドウ**: `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-tooltip`
+   - **フォーカス状態**: `--focus-primary`, `--shadow-primary-sm`, `--shadow-primary-md`, `--shadow-success-sm`
+   - **スクロールバー**: `--scrollbar-default`, `--scrollbar-hover`
 
 2. **`:root[data-theme="light"]`**
    - ライトテーマ専用の上書き（同じ変数名で値を上書き）
@@ -140,7 +197,7 @@ npm install
 #### 例：新しい色を追加する場合
 
 ```css
-/* :root に定義 */
+/* colors.css :root に定義 */
 :root {
   --new-color: rgba(100, 150, 200, 0.8);
 }
@@ -163,11 +220,12 @@ npm install
 }
 ```
 
-#### 色の使用規則
+#### 色の使用規則（【MUST】）
 
 - **直書き禁止**: `background: rgba(50, 50, 50);` ❌
-- **変数使用推奨**: `background: var(--bg-tabbar);` ✅
-- テーマ依存性が高い色（背景、テキスト）は必ず CSS 変数を使う
+- **変数使用必須**: `background: var(--bg-tabbar);` ✅
+- テーマ依存性が高い色（背景、テキスト、シャドウ）は**必ず** CSS 変数を使う
+- colors.css に新しい色を追加して、他のファイルで変数を使用する形に統一
 
 ## カスタマイズ
 

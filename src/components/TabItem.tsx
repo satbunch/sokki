@@ -1,4 +1,4 @@
-import { Note } from '../types';
+import { Note } from '../types/index';
 import { previewTooltip } from '../utils/previewTooltip';
 import { Feather } from 'lucide-react';
 

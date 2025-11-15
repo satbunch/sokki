@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useStore } from '../store';
+import { useStore } from '../services/store';
 import { useTheme } from '../theme/ThemeContext';
 
 interface SettingsProps {

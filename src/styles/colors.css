@@ -48,12 +48,22 @@
   --overlay-hover: rgba(0, 0, 0, 0.04);
   --overlay-active: rgba(0, 0, 0, 0.08);
   --overlay-button-close: rgba(255, 59, 48, 0.1);
+  --overlay-disabled: rgba(0, 0, 0, 0.04);
 
   /* Shadows */
   --shadow-sm: rgba(0, 0, 0, 0.15);
   --shadow-md: rgba(0, 0, 0, 0.25);
   --shadow-lg: rgba(0, 0, 0, 0.35);
   --shadow-tooltip: rgba(0, 0, 0, 0.35);
+
+  /* Focus states (semantic colors) */
+  --focus-primary: rgba(0, 122, 255, 0.1);
+  --shadow-primary-sm: rgba(0, 122, 255, 0.3);
+  --shadow-primary-md: rgba(0, 122, 255, 0.4);
+  --shadow-success-sm: rgba(52, 199, 89, 0.3);
+
+  /* Modal overlay */
+  --overlay-modal-bg: rgba(0, 0, 0, 0.5);
 
   /* Scrollbar */
   --scrollbar-default: rgba(0, 0, 0, 0.15);
@@ -89,12 +99,22 @@
   --overlay-hover: rgba(255, 255, 255, 0.08);
   --overlay-active: rgba(255, 255, 255, 0.12);
   --overlay-button-close: rgba(255, 59, 48, 0.1);
+  --overlay-disabled: rgba(255, 255, 255, 0.08);
 
   /* Shadows */
   --shadow-sm: rgba(0, 0, 0, 0.5);
   --shadow-md: rgba(0, 0, 0, 0.5);
   --shadow-lg: rgba(0, 0, 0, 0.5);
   --shadow-tooltip: rgba(0, 0, 0, 0.5);
+
+  /* Focus states (semantic colors) */
+  --focus-primary: rgba(0, 122, 255, 0.1);
+  --shadow-primary-sm: rgba(0, 122, 255, 0.3);
+  --shadow-primary-md: rgba(0, 122, 255, 0.4);
+  --shadow-success-sm: rgba(52, 199, 89, 0.3);
+
+  /* Modal overlay */
+  --overlay-modal-bg: rgba(0, 0, 0, 0.5);
 
   /* Scrollbar */
   --scrollbar-default: rgba(255, 255, 255, 0.2);
@@ -129,12 +149,22 @@
     --overlay-hover: rgba(255, 255, 255, 0.08);
     --overlay-active: rgba(255, 255, 255, 0.12);
     --overlay-button-close: rgba(255, 59, 48, 0.1);
+    --overlay-disabled: rgba(255, 255, 255, 0.08);
 
     /* Shadows */
     --shadow-sm: rgba(0, 0, 0, 0.5);
     --shadow-md: rgba(0, 0, 0, 0.5);
     --shadow-lg: rgba(0, 0, 0, 0.5);
     --shadow-tooltip: rgba(0, 0, 0, 0.5);
+
+    /* Focus states (semantic colors) */
+    --focus-primary: rgba(0, 122, 255, 0.1);
+    --shadow-primary-sm: rgba(0, 122, 255, 0.3);
+    --shadow-primary-md: rgba(0, 122, 255, 0.4);
+    --shadow-success-sm: rgba(52, 199, 89, 0.3);
+
+    /* Modal overlay */
+    --overlay-modal-bg: rgba(0, 0, 0, 0.5);
 
     /* Scrollbar */
     --scrollbar-default: rgba(255, 255, 255, 0.2);

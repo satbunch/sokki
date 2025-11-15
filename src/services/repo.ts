@@ -7,7 +7,7 @@
  * - Storage key management
  */
 
-import type { AppStateShape, Note, Settings, NoteId } from './types';
+import type { AppStateShape, Note, Settings, NoteId } from '../types';
 
 const STORAGE_KEY = 'sokki_state_v1';
 

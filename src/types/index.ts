@@ -26,6 +26,47 @@ export type Note = {
 };
 
 /**
+ * Shortcut key configuration.
+ * Stores modifier keys and key code for a shortcut.
+ */
+export type ShortcutKey = {
+  /**
+   * Whether Cmd/Ctrl key is pressed
+   */
+  ctrlKey: boolean;
+  /**
+   * Whether Shift key is pressed
+   */
+  shiftKey: boolean;
+  /**
+   * Whether Alt/Option key is pressed
+   */
+  altKey: boolean;
+  /**
+   * The main key pressed (single character)
+   */
+  key: string;
+};
+
+/**
+ * Shortcut settings for local keyboard actions.
+ */
+export type ShortcutSettings = {
+  /**
+   * Copy to clipboard shortcut (default: Cmd+C)
+   */
+  copy: ShortcutKey;
+  /**
+   * Create new memo shortcut (default: Cmd+N)
+   */
+  newMemo: ShortcutKey;
+  /**
+   * Delete current memo shortcut (default: Cmd+W)
+   */
+  deleteMemo: ShortcutKey;
+};
+
+/**
  * Application settings.
  */
 export type Settings = {
@@ -37,6 +78,10 @@ export type Settings = {
    * Window opacity level (0..100)
    */
   opacity: number;
+  /**
+   * Shortcut key settings
+   */
+  shortcuts: ShortcutSettings;
 };
 
 /**

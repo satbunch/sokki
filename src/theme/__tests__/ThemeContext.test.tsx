@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
 import { ThemeProvider, useTheme } from '../ThemeContext';
 
 // Mock localStorage
@@ -113,7 +112,7 @@ describe('ThemeContext', () => {
   });
 
   it('should update data-theme when preference changes', async () => {
-    const { rerender } = render(
+    render(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>

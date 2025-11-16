@@ -57,7 +57,7 @@ export function Editor() {
   };
 
   /**
-   * Set up keyboard shortcuts (Cmd+C, Cmd+Shift+N, Cmd+W, Esc)
+   * Set up keyboard shortcuts (Cmd+C, Cmd+N, Cmd+W, Esc)
    */
   useEffect(() => {
     const setupShortcuts = async () => {

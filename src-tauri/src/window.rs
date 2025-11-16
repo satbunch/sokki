@@ -1,4 +1,4 @@
-use tauri::{App, Manager, TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
+use tauri::{App, TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
 
 /// Set window opacity level (0.0 - 1.0, representing 0% - 100%)
 /// Minimum opacity is 0.2 (20%) to ensure visibility even at lowest setting
@@ -15,8 +15,6 @@ pub fn set_window_opacity(
     {
         use objc2_app_kit::NSWindow;
         use std::os::raw::c_void;
-        // use cocoa::appkit::NSWindow;
-        // use cocoa::base::id;
 
         let raw = window.ns_window().map_err(|e| format!("failed to get ns_window handle: {e}"))?;
         // let ns_window = window.ns_window().unwrap() as id;
@@ -25,8 +23,6 @@ pub fn set_window_opacity(
             return Err("ns_window pointer was null".into());
         }
         unsafe {
-            // ns_window.setAlphaValue_(clamped_opacity);
-            // let alpha: CGFloat = clamped_opacity as CGFloat;
             (*ns_window).setAlphaValue(clamped_opacity);
         }
     }
@@ -49,7 +45,7 @@ pub fn set_window_opacity(
 pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
     let mut win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .title("Sokki")
-        .inner_size(600.0, 400.0)
+        .inner_size(700.0, 500.0)
         .min_inner_size(400.0, 300.0)
         .center()
         .visible(false)
@@ -64,13 +60,11 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
 
     let window = win_builder.build()?;
 
-    //set background color only when building for macOS
+    // Apply vibrancy (blur effect) and set background color on macOS
     #[cfg(target_os = "macos")]
     {
         use objc2_app_kit::{NSColor, NSWindow};
         use std::os::raw::c_void;
-        // use cocoa::appkit::{NSColor, NSWindow};
-        // use cocoa::base::{id, nil};
 
         if let Ok(raw) = window.ns_window() {
             let ns_window = raw as *mut c_void as *mut NSWindow;
@@ -91,17 +85,6 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
         } else {
             eprintln!("Failed to get ns_window handle when setting background color");
         }
-        // let ns_window = window.ns_window().unwrap() as id;
-        // unsafe {
-        //     let bg_color = NSColor::colorWithCalibratedRed_green_blue_alpha_(
-        //         nil,
-        //         103.0 / 255.0,  // R
-        //         146.0 / 255.0,  // G
-        //         177.0 / 255.0,  // B
-        //         1.0,            // A
-        //     );
-        //     ns_window.setBackgroundColor_(bg_color);
-        // }
     }
 
     Ok(())

@@ -8,52 +8,100 @@ pub fn set_window_opacity(
     opacity: f64,
 ) -> Result<(), String> {
     // Clamp opacity: minimum 0.2 (20%) to keep window visible, maximum 1.0 (100%)
-    let clamped_opacity = opacity.max(0.2).min(1.0);
+    let clamped_opacity = opacity.clamp(0.2, 1.0);
 
-    // Apply opacity to body instead of documentElement to preserve blur on container
-    let _ = window.eval(&format!(
-        "document.body.style.opacity = '{}'",
-        clamped_opacity
-    ));
+    // Apply transparency on macOS using Cocoa API
+    #[cfg(target_os = "macos")]
+    {
+        use objc2_app_kit::NSWindow;
+        use std::os::raw::c_void;
+        // use cocoa::appkit::NSWindow;
+        // use cocoa::base::id;
+
+        let raw = window.ns_window().map_err(|e| format!("failed to get ns_window handle: {e}"))?;
+        // let ns_window = window.ns_window().unwrap() as id;
+        let ns_window = raw as *mut c_void as *mut NSWindow;
+        if ns_window.is_null() {
+            return Err("ns_window pointer was null".into());
+        }
+        unsafe {
+            // ns_window.setAlphaValue_(clamped_opacity);
+            // let alpha: CGFloat = clamped_opacity as CGFloat;
+            (*ns_window).setAlphaValue(clamped_opacity);
+        }
+    }
+
+    // Fallback for other platforms: apply opacity to body
+    #[cfg(not(target_os = "macos"))]
+    {
+        if let Err(e) = window.eval(&format!(
+            "document.body.style.opacity = '{}'",
+            clamped_opacity
+        )) {
+            eprintln!("Failed to set opacity via JS: {e}");
+        };
+    }
 
     Ok(())
 }
 
 /// Initialize window: hide initially
 pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
-    let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+    let mut win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .title("Sokki")
         .inner_size(600.0, 400.0)
         .min_inner_size(400.0, 300.0)
         .center()
         .visible(false)
         .resizable(true)
-        .maximizable(false)
-        .title_bar_style(TitleBarStyle::Transparent);
+        .maximizable(false);
 
     // set transparent title bar only when building for macOS
     #[cfg(target_os = "macos")]
-    let win_builder = win_builder.title_bar_style(TitleBarStyle::Transparent);
+    {
+        win_builder = win_builder.title_bar_style(TitleBarStyle::Transparent);
+    }
 
-    let window = win_builder.build().unwrap();
+    let window = win_builder.build()?;
 
     //set background color only when building for macOS
     #[cfg(target_os = "macos")]
     {
-        use cocoa::appkit::{NSColor, NSWindow};
-        use cocoa::base::{id, nil};
+        use objc2_app_kit::{NSColor, NSWindow};
+        use std::os::raw::c_void;
+        // use cocoa::appkit::{NSColor, NSWindow};
+        // use cocoa::base::{id, nil};
 
-        let ns_window = window.ns_window().unwrap() as id;
-        unsafe {
-            let bg_color = NSColor::colorWithCalibratedRed_green_blue_alpha_(
-                nil,
-                103.0 / 255.0,  // R
-                146.0 / 255.0,  // G
-                177.0 / 255.0,  // B
-                1.0,            // A
-            );
-            ns_window.setBackgroundColor_(bg_color);
+        if let Ok(raw) = window.ns_window() {
+            let ns_window = raw as *mut c_void as *mut NSWindow;
+            if ns_window.is_null() {
+                eprintln!("ns_window pointer was null when setting background color")
+            } else {
+                unsafe {
+                    let r = 103.0 / 255.0;
+                    let g = 146.0 / 255.0;
+                    let b = 177.0 / 255.0;
+                    let a = 1.0;
+
+                    let bg_color = NSColor::colorWithCalibratedRed_green_blue_alpha(r, g, b, a);
+
+                    (*ns_window).setBackgroundColor(Some(&*bg_color));
+                }
+            }
+        } else {
+            eprintln!("Failed to get ns_window handle when setting background color");
         }
+        // let ns_window = window.ns_window().unwrap() as id;
+        // unsafe {
+        //     let bg_color = NSColor::colorWithCalibratedRed_green_blue_alpha_(
+        //         nil,
+        //         103.0 / 255.0,  // R
+        //         146.0 / 255.0,  // G
+        //         177.0 / 255.0,  // B
+        //         1.0,            // A
+        //     );
+        //     ns_window.setBackgroundColor_(bg_color);
+        // }
     }
 
     Ok(())

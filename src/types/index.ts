@@ -53,6 +53,10 @@ export type ShortcutKey = {
  */
 export type ShortcutSettings = {
   /**
+   * Global show/focus window shortcut (default: Cmd+Shift+M)
+   */
+  globalShow: ShortcutKey;
+  /**
    * Copy to clipboard shortcut (default: Cmd+C)
    */
   copy: ShortcutKey;

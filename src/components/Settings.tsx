@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../services/store';
 import { useTheme } from '../theme/ThemeContext';
+import { extractShortcutKey, formatShortcut, isValidShortcut } from '../utils/shortcut';
+import { updateGlobalShortcut, setGlobalShortcutEnabled } from '../lib/commands/tauri-commands';
 
 interface SettingsProps {
   onClose?: () => void;
@@ -10,15 +12,41 @@ export function Settings({ onClose }: SettingsProps) {
   const { settings } = useStore();
   const setMaxTabs = useStore((state) => state.setMaxTabs);
   const setOpacity = useStore((state) => state.setOpacity);
+  const setShortcuts = useStore((state) => state.setShortcuts);
   const { preference, setPreference } = useTheme();
   const [maxTabs, setMaxTabsLocal] = useState(settings.maxTabs);
   const [opacity, setOpacityLocal] = useState(settings.opacity);
   const [themePreference, setThemePreferenceLocal] = useState(preference);
+  const [globalShortcut, setGlobalShortcutLocal] = useState(settings.shortcuts.globalShow);
+  const [isListening, setIsListening] = useState(false);
+  const [shortcutCaptured, setShortcutCaptured] = useState(false);
+  const [changeSuccess, setChangeSuccess] = useState(false);
 
+  // Disable global shortcut when settings opens, re-enable when closes
+  useEffect(() => {
+    setGlobalShortcutEnabled(false);
 
-  // Close settings when Esc key is pressed
+    return () => {
+      setGlobalShortcutEnabled(true);
+    };
+  }, []);
+
+  // Close settings when Esc key is pressed (if not listening for shortcut)
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
+      // If listening for shortcut, handle key capture
+      if (isListening) {
+        e.preventDefault();
+        if (isValidShortcut(e)) {
+          const newShortcut = extractShortcutKey(e);
+          setGlobalShortcutLocal(newShortcut);
+          setShortcutCaptured(true);
+          setIsListening(false);
+        }
+        return;
+      }
+
+      // Normal Esc handling
       if (e.key === 'Escape') {
         e.preventDefault();
         onClose?.();
@@ -27,7 +55,7 @@ export function Settings({ onClose }: SettingsProps) {
 
     window.addEventListener('keydown', handleKeydown);
     return () => window.removeEventListener('keydown', handleKeydown);
-  }, [onClose]);
+  }, [onClose, isListening]);
 
   const handleOpacityChange = (value: number) => {
     const clamped = Math.max(0, Math.min(100, Math.round(value)));
@@ -46,6 +74,32 @@ export function Settings({ onClose }: SettingsProps) {
     if (!isNaN(value)) {
       setMaxTabsLocal(value);
       setMaxTabs(value);
+    }
+  };
+
+  const handleShortcutDisplayClick = () => {
+    setIsListening(true);
+  };
+
+  const handleChangeButtonClick = async () => {
+    // Apply the captured shortcut
+    try {
+      await updateGlobalShortcut(globalShortcut);
+      // Update store after successful backend update
+      setShortcuts({
+        ...settings.shortcuts,
+        globalShow: globalShortcut,
+      });
+      // Show success feedback
+      setChangeSuccess(true);
+      setShortcutCaptured(false);
+      // Hide feedback after 2 seconds
+      setTimeout(() => setChangeSuccess(false), 2000);
+    } catch (error) {
+      console.error('Failed to update global shortcut:', error);
+      // Reset to previous shortcut if update fails
+      setGlobalShortcutLocal(settings.shortcuts.globalShow);
+      setShortcutCaptured(false);
     }
   };
 
@@ -139,6 +193,35 @@ export function Settings({ onClose }: SettingsProps) {
                   </label>
                 ))}
               </div>
+            </div>
+
+            <div className="settings-item">
+              <label>Global Shortcut:</label>
+              <div className="shortcut-control">
+                <div
+                  className="shortcut-display"
+                  onClick={handleShortcutDisplayClick}
+                  style={{ cursor: isListening ? 'default' : 'pointer' }}
+                >
+                  {isListening ? (
+                    <span className="shortcut-listening">Listening...</span>
+                  ) : (
+                    <span className="shortcut-value">{formatShortcut(globalShortcut)}</span>
+                  )}
+                </div>
+                <button
+                  onClick={handleChangeButtonClick}
+                  className={`settings-button ${changeSuccess ? 'settings-button-success' : 'settings-button-secondary'}`}
+                  disabled={isListening || !shortcutCaptured}
+                >
+                  {changeSuccess ? '✓ Applied' : 'Change'}
+                </button>
+              </div>
+              <span className="settings-hint">
+                {isListening
+                  ? 'Press any key combination with a modifier key + another key (e.g., Cmd+Shift+K)'
+                  : 'Click to record a new shortcut, then press Change to apply'}
+              </span>
             </div>
           </div>
         </div>

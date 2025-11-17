@@ -16,8 +16,26 @@
   backdrop-filter: blur(2px);
 }
 
+/* Light theme: black overlay */
+:root[data-theme="light"] .settings-overlay,
+:root:not([data-theme]) .settings-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark theme: transparent overlay */
+:root[data-theme="dark"] .settings-overlay {
+  background: transparent;
+}
+
+/* System dark mode fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .settings-overlay {
+    background: transparent;
+  }
+}
+
 .settings-content {
-  background: var(--bg-container);
+  background: var(--bg-editor);
   border-radius: 12px;
   box-shadow: 0 20px 60px var(--shadow-lg);
   width: 700px;
@@ -191,8 +209,19 @@
   color: var(--text-secondary);
 }
 
-.settings-button-secondary:hover {
+.settings-button-secondary:hover:not(:disabled) {
   background: var(--overlay-active);
+}
+
+.settings-button-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-button-success {
+  background: var(--color-success);
+  color: white;
+  box-shadow: 0 1px 3px var(--shadow-success-sm);
 }
 
 /* Theme options radio buttons */
@@ -278,7 +307,7 @@
 }
 
 .opacity-input {
-  width: 50px;
+  width: 70px;
   padding: 6px 8px;
   text-align: center;
   font-size: 13px;
@@ -288,5 +317,51 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
+}
+
+/* Global Shortcut Control */
+.shortcut-control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.shortcut-display {
+  flex: 1;
+  padding: 8px 12px;
+  border: 0.5px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 13px;
+  background: transparent;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+
+.shortcut-display:hover {
+  background: var(--overlay-subtle);
+  border-color: var(--color-primary);
+}
+
+.shortcut-value {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.shortcut-listening {
+  color: var(--color-primary);
+  font-weight: 500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 

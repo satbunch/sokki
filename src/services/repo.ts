@@ -43,6 +43,7 @@ function validateNote(note: unknown): Note | null {
  * Default shortcut settings
  */
 const DEFAULT_SHORTCUTS = {
+  globalShow: { ctrlKey: true, shiftKey: true, altKey: false, key: 'm' },
   copy: { ctrlKey: true, shiftKey: false, altKey: false, key: 'c' },
   newMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'n' },
   deleteMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'w' },
@@ -84,6 +85,7 @@ function validateSettings(settings: unknown): Settings {
   if (typeof s.shortcuts === 'object' && s.shortcuts !== null) {
     const sc = s.shortcuts as Record<string, unknown>;
     shortcuts = {
+      globalShow: validateShortcutKey(sc.globalShow) || DEFAULT_SHORTCUTS.globalShow,
       copy: validateShortcutKey(sc.copy),
       newMemo: validateShortcutKey(sc.newMemo),
       deleteMemo: validateShortcutKey(sc.deleteMemo),

@@ -77,6 +77,7 @@ export const useStore = create<Store>((set, get) => ({
     maxTabs: 10,
     opacity: 80,
     shortcuts: {
+      globalShow: { ctrlKey: true, shiftKey: true, altKey: false, key: 'm' },
       copy: { ctrlKey: true, shiftKey: false, altKey: false, key: 'c' },
       newMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'n' },
       deleteMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'w' },

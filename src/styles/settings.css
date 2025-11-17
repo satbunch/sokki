@@ -16,21 +16,17 @@
   backdrop-filter: blur(2px);
 }
 
-/* Light theme: black overlay */
+/* Light theme and dark theme: black overlay */
 :root[data-theme="light"] .settings-overlay,
+:root[data-theme="dark"] .settings-overlay,
 :root:not([data-theme]) .settings-overlay {
   background: rgba(0, 0, 0, 0.5);
-}
-
-/* Dark theme: transparent overlay */
-:root[data-theme="dark"] .settings-overlay {
-  background: transparent;
 }
 
 /* System dark mode fallback */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) .settings-overlay {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.5);
   }
 }
 

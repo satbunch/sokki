@@ -37,6 +37,7 @@ export function Settings({ onClose }: SettingsProps) {
       // If listening for shortcut, handle key capture
       if (isListening) {
         e.preventDefault();
+        e.stopPropagation();
         if (isValidShortcut(e)) {
           const newShortcut = extractShortcutKey(e);
           setGlobalShortcutLocal(newShortcut);
@@ -46,15 +47,16 @@ export function Settings({ onClose }: SettingsProps) {
         return;
       }
 
-      // Normal Esc handling
+      // Normal Esc handling - close settings, don't hide window
       if (e.key === 'Escape') {
         e.preventDefault();
+        e.stopPropagation();
         onClose?.();
       }
     };
 
-    window.addEventListener('keydown', handleKeydown);
-    return () => window.removeEventListener('keydown', handleKeydown);
+    window.addEventListener('keydown', handleKeydown, true);
+    return () => window.removeEventListener('keydown', handleKeydown, true);
   }, [onClose, isListening]);
 
   const handleOpacityChange = (value: number) => {

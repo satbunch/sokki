@@ -69,16 +69,16 @@ function validateShortcutKey(key: unknown): ShortcutKey {
 /**
  * Validates and normalizes Settings object.
  * Clamps maxTabs to valid range [3, 30], defaults to 10 if invalid.
- * Clamps opacity to valid range [0, 100], defaults to 80 if invalid.
+ * Clamps opacity to valid range [0, 100], defaults to 100 if invalid.
  */
 function validateSettings(settings: unknown): Settings {
   if (typeof settings !== 'object' || settings === null) {
-    return { maxTabs: 10, opacity: 80, shortcuts: DEFAULT_SHORTCUTS };
+    return { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS };
   }
 
   const s = settings as Record<string, unknown>;
   const maxTabs = typeof s.maxTabs === 'number' ? s.maxTabs : 10;
-  const opacity = typeof s.opacity === 'number' ? s.opacity : 80;
+  const opacity = typeof s.opacity === 'number' ? s.opacity : 100;
 
   // Validate shortcuts
   let shortcuts = DEFAULT_SHORTCUTS;
@@ -109,7 +109,7 @@ function validateAppState(state: unknown): AppStateShape {
     return {
       notes: [],
       activeId: null,
-      settings: { maxTabs: 10, opacity: 80, shortcuts: DEFAULT_SHORTCUTS },
+      settings: { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS },
     };
   }
 
@@ -154,7 +154,7 @@ export const repo = {
         return {
           notes: [],
           activeId: null,
-          settings: { maxTabs: 10, opacity: 80, shortcuts: DEFAULT_SHORTCUTS },
+          settings: { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS },
         };
       }
 
@@ -166,7 +166,7 @@ export const repo = {
       return {
         notes: [],
         activeId: null,
-        settings: { maxTabs: 10, opacity: 80, shortcuts: DEFAULT_SHORTCUTS },
+        settings: { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS },
       };
     }
   },

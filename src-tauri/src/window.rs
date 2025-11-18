@@ -45,7 +45,7 @@ pub fn set_window_opacity(
 pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
     let mut win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .title("Sokki")
-        .inner_size(700.0, 500.0)
+        .inner_size(800.0, 500.0)
         .min_inner_size(400.0, 300.0)
         .center()
         .visible(false)

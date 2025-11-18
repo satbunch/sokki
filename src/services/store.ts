@@ -6,7 +6,7 @@
 import { create } from 'zustand';
 import { debounce } from '../utils/debounce';
 import { repo } from './repo';
-import type { AppStateShape, Note, NoteId, IsoDate } from '../types';
+import type { AppStateShape, Note, NoteId, IsoDate, ShortcutSettings } from '../types';
 
 /**
  * Store state and action types.
@@ -26,6 +26,7 @@ interface Store extends AppStateShape {
   deleteNote: (id: NoteId) => void;
   setMaxTabs: (n: number) => void;
   setOpacity: (opacity: number) => void;
+  setShortcuts: (shortcuts: ShortcutSettings) => void;
   setCopyStatus: (status: 'idle' | 'copied') => void;
 }
 
@@ -72,7 +73,16 @@ export const useStore = create<Store>((set, get) => ({
   // Initial state
   notes: [],
   activeId: null,
-  settings: { maxTabs: 10, opacity: 80 },
+  settings: {
+    maxTabs: 10,
+    opacity: 80,
+    shortcuts: {
+      globalShow: { ctrlKey: true, shiftKey: true, altKey: false, key: 'm' },
+      copy: { ctrlKey: true, shiftKey: false, altKey: false, key: 'c' },
+      newMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'n' },
+      deleteMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'w' },
+    },
+  },
   copyStatus: 'idle',
 
   // Selector: Get currently active note
@@ -241,6 +251,21 @@ export const useStore = create<Store>((set, get) => ({
       const newState: AppStateShape = {
         ...state,
         settings: { ...state.settings, opacity: clampedOpacity },
+      };
+
+      // Save to repository
+      debouncedSaveAll(newState);
+
+      return newState;
+    });
+  },
+
+  // Action: Set shortcut configuration
+  setShortcuts: (shortcuts: ShortcutSettings) => {
+    set((state) => {
+      const newState: AppStateShape = {
+        ...state,
+        settings: { ...state.settings, shortcuts },
       };
 
       // Save to repository

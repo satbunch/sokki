@@ -98,7 +98,9 @@ src/
   - テキストエリアの状態管理と ref ベースのフォーカス管理
   - グローバルショートカットとの連携 (`listen('new-memo')`) - mode パラメータ対応
   - ウィンドウフォーカス検知 (`onFocusChanged`) でフォーカス時に textarea にフォーカス
-  - キーボードイベント処理 (Esc で閉じる、⌘+C でコピー)
+  - ローカルキーボード処理:
+    - **⌘+, (Cmd+Comma)** — 設定画面をトグル表示
+    - **Esc** — ウィンドウを非表示
 
 - **src/services/store.ts**: Zustand による状態管理
   - `useStore`: グローバルストア (notes, activeId, settings など)
@@ -119,16 +121,19 @@ src/
   - **システムトレイ設定** (`TrayIconBuilder`):
     - メニュー項目: "Show"、"Quit"
     - 左クリックでウィンドウ表示
-  - **グローバルショートカット登録** (2つ):
-    - **表示/フォーカス** (line 61-80): `⌘ + Shift + M` (main.rs:66)
+  - **グローバルショートカット登録**:
+    - **表示/フォーカス** — `⌘ + Shift + M` (src-tauri/src/shortcuts.rs)
       - ウィンドウが非表示なら表示、既に表示されている場合はフォーカスのみ
-    - **新規メモ** (line 83-106): `⌘ + Shift + N` (main.rs:90)
-      - トグル動作: 表示時は非表示に、非表示時は表示してフォーカス
-      - 表示時に `new-memo` イベントを `{ "mode": "new" }` とともに emit してフロントエンドのテキストをクリア
   - **ウィンドウ管理**:
-    - 初期状態は非表示 (main.rs:54)
+    - 初期状態は非表示
     - `skipTaskbar` で常駐アプリとして振る舞う
     - `decorations: true`, `transparent: false` (tauri.conf.json)
+
+- **src/lib/commands/app-commands.ts**: ローカルキーボード処理 (Sokki ウィンドウが表示時のみ)
+  - **⌘+C** — クリップボードにコピー
+  - **⌘+N** — 新規メモ作成（テキスト内容をクリア、フォーカス）
+  - **⌘+W** — 現在のメモ削除
+  - **Esc** — ウィンドウを非表示
 
 ### 重要な設定ファイル
 
@@ -140,20 +145,6 @@ src/
 - **src-tauri/Cargo.toml**:
   - Tauri プラグイン: `global-shortcut`、`clipboard-manager`、`shell`
   - `macos-private-api` feature: macOS プライベート API を使用
-
-### イベントフロー
-
-#### 新規メモ作成 (⌘+Shift+N)
-1. ユーザーがグローバルショートカット (⌘+Shift+N) を押下
-2. Rust 側でウィンドウの表示/非表示をトグル
-3. 表示時に `new-memo` イベントを `{ "mode": "new" }` とともに emit
-4. React 側で `listen<{ mode?: string }>('new-memo')` がイベントをキャッチ
-5. mode が "new" の場合、テキストエリアをクリアしてフォーカス
-
-#### ウィンドウフォーカス時
-1. ウィンドウがフォーカスを取得
-2. `onFocusChanged` イベントが発火
-3. `textareaRef` または `querySelector` でテキストエリアにフォーカス
 
 ## スタイル管理
 
@@ -231,26 +222,27 @@ src/styles/
 
 ### グローバルショートカット変更
 
-2つのショートカットがあります:
-
-**表示/フォーカス** (`src-tauri/src/main.rs:66`):
+**表示/フォーカス** (`src-tauri/src/shortcuts.rs:14`):
 ```rust
 Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyM)
 ```
 
-**新規メモ** (`src-tauri/src/main.rs:90`):
+変更例 (⌘ + Shift + K に変更):
 ```rust
-Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN)
+Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyK)
 ```
 
-変更例:
-```rust
-// ⌘ + K に変更
-Shortcut::new(Some(Modifiers::SUPER), Code::KeyK)
+### ローカルショートカット変更
 
-// ⌘ + Option + N に変更
-Shortcut::new(Some(Modifiers::SUPER | Modifiers::ALT), Code::KeyN)
-```
+**クリップボード、新規メモ、削除** (`src/lib/commands/app-commands.ts:50-80`):
+
+現在の実装:
+- **⌘+C** — クリップボードにコピー
+- **⌘+N** — 新規メモ作成
+- **⌘+W** — メモ削除
+- **Esc** — ウィンドウ非表示
+
+キーコード部分を編集して変更可能です（例：`e.key === 'c'` を別のキーに変更）。
 
 ### ウィンドウサイズ変更
 

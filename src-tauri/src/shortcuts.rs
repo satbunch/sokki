@@ -10,7 +10,7 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
     // Only shows window and sets focus (does not toggle)
     {
         let app_handle = app_handle.clone();
-        app_handle.global_shortcut().on_shortcut(
+        match app_handle.global_shortcut().on_shortcut(
             Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyM),
             move |app, _shortcut, event| {
                 if event.state == ShortcutState::Pressed {
@@ -20,7 +20,13 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
                     }
                 }
             },
-        )?;
+        ) {
+            Ok(_) => {},
+            Err(e) => {
+                eprintln!("Failed to register global shortcut: {}", e);
+                // Don't fail the app startup if shortcut registration fails
+            }
+        }
     }
 
     Ok(())

@@ -30,12 +30,12 @@ function App() {
   }, [settings.opacity]);
 
 
-  // Open settings with Cmd+, or menu click
+  // Toggle settings with Cmd+, (or Ctrl+, on non-macOS)
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === ',') {
         e.preventDefault();
-        setShowSettings(true);
+        setShowSettings((prev) => !prev);
       }
     };
 

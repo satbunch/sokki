@@ -13,7 +13,8 @@ pub fn init(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
     // Load tray icon
-    let icon = Image::from_path("icons/icon.png")?;
+    static TRAY_ICON: &[u8] = include_bytes!("../icons/icon.png");
+    let icon = Image::from_bytes(TRAY_ICON)?;
 
     // Build and register tray icon
     let _tray = TrayIconBuilder::new()

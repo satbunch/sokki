@@ -7,7 +7,7 @@
  * - Storage key management
  */
 
-import type { AppStateShape, Note, Settings, NoteId } from '../types';
+import type { AppStateShape, Note, Settings, NoteId, ShortcutKey } from '../types';
 
 const STORAGE_KEY = 'sokki_state_v1';
 
@@ -40,23 +40,63 @@ function validateNote(note: unknown): Note | null {
 }
 
 /**
+ * Default shortcut settings
+ */
+const DEFAULT_SHORTCUTS = {
+  globalShow: { ctrlKey: true, shiftKey: true, altKey: false, key: 'm' },
+  copy: { ctrlKey: true, shiftKey: false, altKey: false, key: 'c' },
+  newMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'n' },
+  deleteMemo: { ctrlKey: true, shiftKey: false, altKey: false, key: 'w' },
+};
+
+/**
+ * Validates and normalizes a ShortcutKey object
+ */
+function validateShortcutKey(key: unknown): ShortcutKey {
+  if (typeof key !== 'object' || key === null) {
+    return DEFAULT_SHORTCUTS.copy;
+  }
+
+  const k = key as Record<string, unknown>;
+  return {
+    ctrlKey: typeof k.ctrlKey === 'boolean' ? k.ctrlKey : true,
+    shiftKey: typeof k.shiftKey === 'boolean' ? k.shiftKey : false,
+    altKey: typeof k.altKey === 'boolean' ? k.altKey : false,
+    key: typeof k.key === 'string' ? k.key : 'c',
+  };
+}
+
+/**
  * Validates and normalizes Settings object.
  * Clamps maxTabs to valid range [3, 30], defaults to 10 if invalid.
- * Clamps opacity to valid range [0, 100], defaults to 80 if invalid.
+ * Clamps opacity to valid range [0, 100], defaults to 100 if invalid.
  */
 function validateSettings(settings: unknown): Settings {
   if (typeof settings !== 'object' || settings === null) {
-    return { maxTabs: 10, opacity: 80 };
+    return { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS };
   }
 
   const s = settings as Record<string, unknown>;
   const maxTabs = typeof s.maxTabs === 'number' ? s.maxTabs : 10;
-  const opacity = typeof s.opacity === 'number' ? s.opacity : 80;
+  const opacity = typeof s.opacity === 'number' ? s.opacity : 100;
+
+  // Validate shortcuts
+  let shortcuts = DEFAULT_SHORTCUTS;
+  if (typeof s.shortcuts === 'object' && s.shortcuts !== null) {
+    const sc = s.shortcuts as Record<string, unknown>;
+    shortcuts = {
+      globalShow: validateShortcutKey(sc.globalShow) || DEFAULT_SHORTCUTS.globalShow,
+      copy: validateShortcutKey(sc.copy),
+      newMemo: validateShortcutKey(sc.newMemo),
+      deleteMemo: validateShortcutKey(sc.deleteMemo),
+    };
+  }
 
   // Clamp to valid range [3, 30] for maxTabs and [0, 100] for opacity
   return {
     maxTabs: Math.max(3, Math.min(30, Math.round(maxTabs))),
     opacity: Math.max(0, Math.min(100, Math.round(opacity))),
+    shortcuts,
   };
 }
 
@@ -69,7 +109,7 @@ function validateAppState(state: unknown): AppStateShape {
     return {
       notes: [],
       activeId: null,
-      settings: { maxTabs: 10, opacity: 80 },
+      settings: { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS },
     };
   }
 
@@ -114,7 +154,7 @@ export const repo = {
         return {
           notes: [],
           activeId: null,
-          settings: { maxTabs: 10, opacity: 80 },
+          settings: { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS },
         };
       }
 
@@ -126,7 +166,7 @@ export const repo = {
       return {
         notes: [],
         activeId: null,
-        settings: { maxTabs: 10, opacity: 80 },
+        settings: { maxTabs: 10, opacity: 100, shortcuts: DEFAULT_SHORTCUTS },
       };
     }
   },

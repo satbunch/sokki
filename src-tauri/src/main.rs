@@ -5,7 +5,6 @@ use tauri::Manager;
 
 mod menu;
 mod shortcut_manager;
-mod shortcuts;
 mod tray;
 mod window;
 
@@ -16,6 +15,7 @@ fn main() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .invoke_handler(tauri::generate_handler![
             window::set_window_opacity,
+            window::hide_app_and_focus_previous,
             shortcut_manager::update_global_shortcut,
             shortcut_manager::set_global_shortcut_enabled
         ])

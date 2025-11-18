@@ -72,6 +72,10 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
                 // Emit delete-tab event to React when Close Tab menu item is clicked
                 let _ = app_handle.emit("delete-tab", ());
             }
+            "quit" => {
+                // Quit the application
+                app_handle.exit(0);
+            }
             _ => {}
         }
     });

@@ -15,22 +15,6 @@ struct ShortcutKey {
     key: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct ShortcutSettings {
-    #[serde(rename = "globalShow")]
-    global_show: ShortcutKey,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Settings {
-    shortcuts: ShortcutSettings,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct AppState {
-    settings: Settings,
-}
-
 /// Global state to track current shortcut
 pub struct CurrentShortcut {
     pub modifiers: Mutex<Option<Modifiers>>,

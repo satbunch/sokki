@@ -41,6 +41,21 @@ pub fn set_window_opacity(
     Ok(())
 }
 
+#[tauri::command]
+pub fn hide_app_and_focus_previous() {
+    #[cfg(target_os = "macos")]
+    {
+        use objc2::runtime::AnyObject;
+        use objc2_foundation::MainThreadMarker;
+        use objc2_app_kit::{NSApp, NSApplication};
+
+        if let Some(mtm) = MainThreadMarker::new() {
+            let app: objc2::rc::Retained<NSApplication> = NSApp(mtm);
+            app.hide(None::<&AnyObject>);
+        }
+    }
+}
+
 /// Initialize window: hide initially
 pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
     let mut win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
@@ -48,7 +63,7 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
         .inner_size(800.0, 500.0)
         .min_inner_size(400.0, 300.0)
         .center()
-        .visible(false)
+        .visible(true)
         .resizable(true)
         .maximizable(false);
 

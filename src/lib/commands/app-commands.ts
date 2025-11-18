@@ -1,6 +1,6 @@
 import { listen } from '@tauri-apps/api/event';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { invoke } from '@tauri-apps/api/core';
 
 /**
  * Type definitions for app command handlers
@@ -73,7 +73,7 @@ export async function setupKeyboardShortcuts(
     // Esc - Hide Window
     if (e.key === 'Escape') {
       e.preventDefault();
-      await getCurrentWindow().hide();
+      invoke('hide_app_and_focus_previous').catch(console.error)
       return;
     }
   };

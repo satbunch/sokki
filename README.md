@@ -1,56 +1,36 @@
 # Sokki
 
 <p align="center">
-  <img src="https://github.com/satbunch/sokki/blob/develop/docs/assets/github-logo.png" width="500"/>
+  <img src="https://github.com/satbunch/sokki/blob/main/docs/assets/github-logo.png?raw=1" width="500"/>
 </p>
 
 > Jot your thoughts down.
 
 Sokki is a lightning-fast, minimalist macOS-native memo app built for keyboard-driven workflows. With a single shortcut, it instantly opens a focused text area so you can capture your thoughts without losing momentum.
 
----
-
 ## Features
 
-1. Instantly open, write, and close
+**Instantly open, write, and close**
 
-Sokki launches instantly with a global shortcut, focuses the text area the moment it appears, and hides immediately with Esc while keeping your text.
-It’s designed so you can capture your thoughts at the exact speed they come.
+Opens, writes, and closes instantly with a shortcut — letting you capture ideas at the speed they arrive.
 
-2. Minimal UI that never breaks your flow
+**Minimal UI that never breaks your flow**
 
 A single text area, no distractions, and a lightweight macOS-native design.
 Sokki stays out of the way so you can stay in your flow.
-
----
 
 ## Screenshots
 
 ![Main window](./docs/assets/screenshot.png)
 
----
-
 ## Installation
 
-### Option 1: Prebuilt (Recommended)
-
 Download the latest `.dmg` file from the [Releases page](https://github.com/satbunch/sokki/releases) and install it on macOS.
-
-### Option 2: Build from Source
-
-```bash
-git clone https://github.com/satbunch/sokki.git
-cd sokki
-npm install
-npm run tauri dev
-```
 
 Requirements:
 - Node.js >= 18
 - Rust (via rustup)
 - Tauri CLI (`cargo install tauri-cli`)
-
----
 
 ## Keyboard Shortcuts
 
@@ -61,8 +41,6 @@ Requirements:
 | Cmd + N                   | Open new memo tab                |
 | Cmd + W                   | Close current tab                |
 | Cmd + C                   | Copy current memo to clipboard   |
-
----
 
 ## Settings
 
@@ -75,13 +53,9 @@ You can configure the following from the built-in settings window:
 
 Open Settings via `Cmd + ,` or from the macOS menu bar.
 
----
-
 ## Data Persistence
 
 All memos and configuration are stored locally and automatically restored when you relaunch the app.
-
----
 
 ## Contributing
 
@@ -100,25 +74,17 @@ npm run tauri dev
 - Submit PRs with clear intent and context
 - See [CONTRIBUTING.md](./CONTRIBUTING.md) (coming soon)
 
----
-
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](./LICENSE.md) for details.
-
----
 
 ## Maintainer
 
 Sokki is developed and maintained by [@satbunch](https://github.com/satbunch).
 
----
-
 ## Security
 
 If you discover a vulnerability, please report it privately via GitHub issues or contact the maintainer directly.
-
----
 
 ## Version
 

@@ -62,8 +62,6 @@ Requirements:
 | Cmd + W                   | Close current tab                |
 | Cmd + C                   | Copy current memo to clipboard   |
 
-*All bindings are configurable from the Settings screen.*
-
 ---
 
 ## Settings

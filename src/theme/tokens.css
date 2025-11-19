@@ -1,0 +1,76 @@
+/* Theme tokens - unified design system */
+
+:root {
+  /* Shared tokens */
+  --accent-color: #4da6ff;
+  --radius-lg: 14px;
+  --shadow-elev: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --trans-fast: 120ms ease;
+}
+
+/* Light theme = Glassmorphism */
+:root[data-theme="light"] {
+  --bg-color: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(16px);
+  --border-color: rgba(255, 255, 255, 0.35);
+  --text-color: rgba(20, 20, 20, 0.92);
+  --placeholder-color: rgba(60, 60, 60, 0.45);
+  --button-bg: rgba(255, 255, 255, 0.28);
+  --button-hover-bg: rgba(255, 255, 255, 0.45);
+  --button-border: rgba(255, 255, 255, 0.5);
+}
+
+/* Dark theme = Matte + Blue accent */
+:root[data-theme="dark"] {
+  --bg-color: #1f1f1f;
+  --glass-blur: blur(0px);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --text-color: rgba(255, 255, 255, 0.92);
+  --placeholder-color: rgba(200, 200, 200, 0.4);
+  --button-bg: rgba(255, 255, 255, 0.08);
+  --button-hover-bg: rgba(255, 255, 255, 0.16);
+  --button-border: rgba(255, 255, 255, 0.12);
+}
+
+/* Generic patterns */
+.app-shell {
+  background: var(--bg-color);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elev);
+  transition: background var(--trans-fast), color var(--trans-fast), border-color var(--trans-fast);
+}
+
+.text-normal {
+  color: var(--text-color);
+}
+
+.text-muted {
+  color: var(--placeholder-color);
+}
+
+.button {
+  background: var(--button-bg);
+  border: 1px solid var(--button-border);
+  border-radius: 10px;
+  transition: background var(--trans-fast), border-color var(--trans-fast), transform var(--trans-fast);
+}
+
+.button:hover {
+  background: var(--button-hover-bg);
+}
+
+.button-primary {
+  outline: none;
+}
+
+.button-primary:focus {
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.caret-accent,
+.accent {
+  color: var(--accent-color);
+}

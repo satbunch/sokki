@@ -1,130 +1,129 @@
-# Sokki - Ultra-Lightweight Resident Memo App
+# Sokki
 
-A minimalist, lightning-fast note-taking app for macOS with a beautiful Mac-native design. Built with Tauri.
+<p align="center">
+  <img src="https://github.com/satbunch/sokki/blob/develop/docs/assets/github-logo.png" width="500"/>
+</p>
+
+> Jot your thoughts down.
+
+Sokki is a lightning-fast, minimalist macOS-native memo app built for keyboard-driven workflows. With a single shortcut, it instantly opens a focused text area so you can capture your thoughts without losing momentum.
+
+---
 
 ## Features
 
-- 🚀 **Ultra-Lightweight**: Only 10-20MB memory usage
-- ⚡️ **Instant Launch**: Summon with keyboard shortcut
-- 🎨 **Mac-Native Design**: Glassmorphic UI with soft aesthetics
-- 🌓 **Dark Mode Support**: Automatically follows system preferences
+1. Instantly open, write, and close
 
-## Keyboard Shortcuts
+Sokki launches instantly with a global shortcut, focuses the text area the moment it appears, and hides immediately with Esc while keeping your text.
+It’s designed so you can capture your thoughts at the exact speed they come.
 
-- `⌘ + Shift + M`: Show window and focus
-- `⌘ + Shift + N`: Toggle window and clear text (new memo)
-- `⌘ + C`: Copy all text (when no text is selected)
-- `Esc`: Close window
+2. Minimal UI that never breaks your flow
 
-## Prerequisites
+A single text area, no distractions, and a lightweight macOS-native design.
+Sokki stays out of the way so you can stay in your flow.
 
-- Node.js 18+
-- Rust (for Tauri)
-- macOS
-- Xcode Command Line Tools
+---
 
-### Installing Rust
+## Screenshots
 
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
+![Main window](./docs/assets/screenshot.png)
 
-### Installing Xcode Command Line Tools
+---
 
-```bash
-xcode-select --install
-```
+## Installation
 
-## Setup
+### Option 1: Prebuilt (Recommended)
 
-### Install Dependencies
+Download the latest `.dmg` file from the [Releases page](https://github.com/satbunch/sokki/releases) and install it on macOS.
+
+### Option 2: Build from Source
 
 ```bash
+git clone https://github.com/satbunch/sokki.git
+cd sokki
 npm install
-```
-
-### Development
-
-```bash
 npm run tauri dev
 ```
 
-### Build
+Requirements:
+- Node.js >= 18
+- Rust (via rustup)
+- Tauri CLI (`cargo install tauri-cli`)
 
+---
+
+## Keyboard Shortcuts
+
+| Shortcut                   | Action                           |
+|---------------------------|----------------------------------|
+| Cmd + Shift + M           | Show & focus memo window         |
+| Esc                       | Hide window                      |
+| Cmd + N                   | Open new memo tab                |
+| Cmd + W                   | Close current tab                |
+| Cmd + C                   | Copy current memo to clipboard   |
+
+*All bindings are configurable from the Settings screen.*
+
+---
+
+## Settings
+
+You can configure the following from the built-in settings window:
+
+- Global shortcut key
+- Maximum number of open tabs
+- Theme: light / dark / system
+- Window opacity
+
+Open Settings via `Cmd + ,` or from the macOS menu bar.
+
+---
+
+## Data Persistence
+
+All memos and configuration are stored locally and automatically restored when you relaunch the app.
+
+---
+
+## Contributing
+
+We welcome pull requests and feedback!
+
+### Setup
 ```bash
-npm run tauri build
-```
-
-The built application will be in `src-tauri/target/release/bundle/`.
-
-## Project Structure
-
-```
-sokki/
-├── src/
-│   ├── App.tsx          # Main React component
-│   ├── App.css          # Styles
-│   └── main.tsx         # Entry point
-├── src-tauri/
-│   ├── src/
-│   │   └── main.rs      # Rust backend
-│   ├── capabilities/
-│   │   └── main-capability.json  # Permission settings
-│   ├── tauri.conf.json  # Tauri configuration
-│   └── Cargo.toml       # Rust dependencies
-├── package.json
-└── vite.config.ts
-```
-
-## Customization
-
-### Change Keyboard Shortcut
-
-There are two shortcuts:
-
-**Show/Focus shortcut** (line 66):
-```rust
-Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyM),
-```
-
-**New memo shortcut** (line 90):
-```rust
-Shortcut::new(Some(Modifiers::SUPER | Modifiers::SHIFT), Code::KeyN),
-```
-
-Examples:
-- `⌘ + K`: `Shortcut::new(Some(Modifiers::SUPER), Code::KeyK)`
-- `⌘ + Option + N`: `Shortcut::new(Some(Modifiers::SUPER | Modifiers::ALT), Code::KeyN)`
-
-### Adjust Window Size
-
-Edit `src-tauri/tauri.conf.json`:
-
-```json
-"width": 600,
-"height": 400,
-```
-
-### Customize Design
-
-Edit `src/App.css` to adjust colors, transparency, and styling.
-
-## Troubleshooting
-
-### Shortcut Not Working
-
-- Grant Accessibility permissions in System Settings > Privacy & Security > Accessibility
-- Check for conflicts with other apps' shortcuts
-
-### Build Errors
-
-```bash
-# Clear cache
-rm -rf node_modules
-rm -rf src-tauri/target
+git clone https://github.com/satbunch/sokki.git
+cd sokki
 npm install
+npm run tauri dev
 ```
+
+### Guidelines
+- Follow existing code style and conventions
+- Submit PRs with clear intent and context
+- See [CONTRIBUTING.md](./CONTRIBUTING.md) (coming soon)
+
+---
 
 ## License
 
-MIT
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
+
+---
+
+## Maintainer
+
+Sokki is developed and maintained by [@satbunch](https://github.com/satbunch).
+
+---
+
+## Security
+
+If you discover a vulnerability, please report it privately via GitHub issues or contact the maintainer directly.
+
+---
+
+## Version
+
+Current release: **v0.1.0**
+
+Changelog and tagging will begin in future minor versions.

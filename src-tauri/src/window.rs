@@ -1,4 +1,4 @@
-use tauri::{App, TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
+use tauri::{App, TitleBarStyle, WebviewUrl, WebviewWindowBuilder, AppHandle};
 
 /// Set window opacity level (0.0 - 1.0, representing 0% - 100%)
 /// Minimum opacity is 0.2 (20%) to ensure visibility even at lowest setting
@@ -54,6 +54,11 @@ pub fn hide_app_and_focus_previous() {
             app.hide(None::<&AnyObject>);
         }
     }
+}
+
+#[tauri::command]
+pub fn quit_app(app: AppHandle) {
+    app.exit(0);
 }
 
 /// Initialize window: hide initially

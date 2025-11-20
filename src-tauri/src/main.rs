@@ -16,6 +16,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             window::set_window_opacity,
             window::hide_app_and_focus_previous,
+            window::quit_app,
             shortcut_manager::update_global_shortcut,
             shortcut_manager::set_global_shortcut_enabled
         ])

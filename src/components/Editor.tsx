@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { useStore } from '../services/store';
 import { setupKeyboardShortcuts, copyContent } from '../lib/commands/app-commands';
+import { invoke } from '@tauri-apps/api/core';
 
 /**
  * Editor component for note editing.
@@ -56,6 +57,10 @@ export function Editor() {
     }
   };
 
+  const handleQuit = () => {
+    invoke('quit_app').catch(console.error);
+  };
+
   /**
    * Set up keyboard shortcuts (Cmd+C, Cmd+N, Cmd+W, Esc)
    */
@@ -65,6 +70,7 @@ export function Editor() {
         onCopyContent: handleCopyContent,
         onNewMemo: handleNewMemo,
         onDeleteTab: handleDeleteTab,
+        onQuit: handleQuit,
       });
 
       return () => {
@@ -77,7 +83,7 @@ export function Editor() {
     return () => {
       cleanupPromise.then((cleanup) => cleanup?.());
     };
-  }, [content, setCopyStatus, createNewNote, activeId, deleteNote]);
+  }, [content, setCopyStatus, createNewNote, activeId, deleteNote, handleQuit]);
 
   /**
    * Handle text change - save to store immediately

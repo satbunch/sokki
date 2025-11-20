@@ -9,6 +9,7 @@ export interface CommandHandlers {
   onCopyContent: () => Promise<void>;
   onNewMemo: () => void;
   onDeleteTab: () => void;
+  onQuit: () => void;
 }
 
 /**
@@ -75,6 +76,11 @@ export async function setupKeyboardShortcuts(
       e.preventDefault();
       invoke('hide_app_and_focus_previous').catch(console.error)
       return;
+    }
+
+    if ((e.metaKey || e.ctrlKey) && e.key === 'q') {
+      e.preventDefault();
+      handlers.onQuit();
     }
   };
 

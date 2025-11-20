@@ -17,7 +17,7 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
             &PredefinedMenuItem::hide_others(app, Some("Hide Others"))?,
             &PredefinedMenuItem::show_all(app, Some("Show All"))?,
             &PredefinedMenuItem::separator(app)?,
-            &MenuItem::with_id(app, "quit", "Quit Sokki", true, Some("CmdOrCtl+Q"))?,
+            &MenuItem::with_id(app, "quit", "Quit Sokki", true, Some("Cmd+Q"))?,
         ],
     )?;
 

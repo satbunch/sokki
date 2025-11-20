@@ -96,6 +96,12 @@ export function Editor() {
       placeholder="Type instantly…"
       autoFocus
       spellCheck={false}
+      className="flex-1 outline-none p-5 text-[15px] leading-relaxed resize-none font-sans border-0 editor-textarea"
+      style={{
+        background: 'var(--bg-editor)',
+        color: 'var(--text-primary)',
+        borderBottom: '2px solid var(--bg-editor)'
+      }}
     />
   );
 }

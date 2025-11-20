@@ -1,9 +1,275 @@
 /* ============================================================================
-   Main Stylesheet - Import Modular Styles
+   Tailwind CSS v4 with Custom Theme
    ============================================================================ */
 
-@import 'styles/colors.css';
-@import 'styles/base.css';
-@import 'styles/layout.css';
-@import 'styles/components.css';
-@import 'styles/settings.css';
+@import "tailwindcss";
+
+/* ============================================================================
+   CSS Custom Properties for Theming
+   ============================================================================ */
+
+@layer base {
+  /* Common colors (theme-independent) */
+  :root {
+    --color-primary: #007AFF;
+    --color-primary-dark: #0051D5;
+    --color-success: #34C759;
+    --color-success-dark: #248A3D;
+    --color-error: #ff3b30;
+    --color-error-hover: #ff453a;
+    --text-tooltip: #f7f7f7;
+  }
+
+  /* Light theme */
+  :root[data-theme="light"],
+  :root:not([data-theme]) {
+    --bg-tabbar: rgba(167, 159, 155, 1);
+    --bg-icon: rgba(167, 159, 155, 1);
+    --bg-tooltip: rgba(20, 20, 20, 0.95);
+    --bg-container: rgba(255, 255, 255, 0.85);
+    --bg-header: rgba(255, 255, 255, 0.4);
+    --bg-tab-inactive: rgba(167, 159, 155, 1);
+    --bg-editor: rgba(195, 189, 182, 1);
+    --text-primary: rgba(0, 0, 0, 0.85);
+    --text-secondary: rgba(0, 0, 0, 0.65);
+    --text-tertiary: rgba(0, 0, 0, 0.5);
+    --text-quaternary: rgba(0, 0, 0, 0.3);
+    --border-light: rgba(0, 0, 0, 0.08);
+    --border-dark: rgba(0, 0, 0, 0.1);
+    --overlay-subtle: rgba(0, 0, 0, 0.04);
+    --overlay-button-bg: rgba(0, 0, 0, 0.04);
+    --overlay-hover: rgba(0, 0, 0, 0.04);
+    --overlay-active: rgba(0, 0, 0, 0.08);
+    --overlay-button-close: rgba(255, 59, 48, 0.1);
+    --overlay-disabled: rgba(0, 0, 0, 0.04);
+    --shadow-sm: rgba(0, 0, 0, 0.15);
+    --shadow-md: rgba(0, 0, 0, 0.25);
+    --shadow-lg: rgba(0, 0, 0, 0.35);
+    --shadow-tooltip: rgba(0, 0, 0, 0.35);
+    --focus-primary: rgba(0, 122, 255, 0.1);
+    --shadow-primary-sm: rgba(0, 122, 255, 0.3);
+    --shadow-primary-md: rgba(0, 122, 255, 0.4);
+    --shadow-success-sm: rgba(52, 199, 89, 0.3);
+    --overlay-modal-bg: rgba(0, 0, 0, 0.5);
+    --scrollbar-default: rgba(0, 0, 0, 0.15);
+    --scrollbar-hover: rgba(0, 0, 0, 0.25);
+  }
+
+  /* Dark theme */
+  :root[data-theme="dark"] {
+    --bg-container: rgba(30, 30, 30, 0.95);
+    --bg-header: rgba(255, 255, 255, 0.05);
+    --bg-tooltip: rgba(40, 40, 40, 0.98);
+    --bg-tabbar: rgba(51, 48, 48, 1);
+    --bg-icon: rgba(51, 48, 48, 1);
+    --bg-tab-inactive: rgba(51, 48, 48, 1);
+    --bg-editor: rgba(73, 73, 76, 1);
+    --text-primary: rgba(255, 255, 255, 0.9);
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-tertiary: rgba(255, 255, 255, 0.6);
+    --text-quaternary: rgba(255, 255, 255, 0.4);
+    --border-light: rgba(255, 255, 255, 0.1);
+    --border-dark: rgba(255, 255, 255, 0.15);
+    --overlay-subtle: rgba(255, 255, 255, 0.08);
+    --overlay-button-bg: rgba(255, 255, 255, 0.08);
+    --overlay-hover: rgba(255, 255, 255, 0.08);
+    --overlay-active: rgba(255, 255, 255, 0.12);
+    --overlay-button-close: rgba(255, 59, 48, 0.1);
+    --overlay-disabled: rgba(255, 255, 255, 0.08);
+    --shadow-sm: rgba(0, 0, 0, 0.5);
+    --shadow-md: rgba(0, 0, 0, 0.5);
+    --shadow-lg: rgba(0, 0, 0, 0.5);
+    --shadow-tooltip: rgba(0, 0, 0, 0.5);
+    --focus-primary: rgba(0, 122, 255, 0.1);
+    --shadow-primary-sm: rgba(0, 122, 255, 0.3);
+    --shadow-primary-md: rgba(0, 122, 255, 0.4);
+    --shadow-success-sm: rgba(52, 199, 89, 0.3);
+    --overlay-modal-bg: rgba(0, 0, 0, 0.5);
+    --scrollbar-default: rgba(255, 255, 255, 0.2);
+    --scrollbar-hover: rgba(255, 255, 255, 0.3);
+  }
+
+  /* System dark mode fallback */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --bg-container: rgba(30, 30, 30, 0.95);
+      --bg-header: rgba(255, 255, 255, 0.05);
+      --bg-tooltip: rgba(40, 40, 40, 0.98);
+      --bg-tab-inactive: rgba(255, 255, 255, 0.1);
+      --bg-editor: rgba(29, 29, 36, 1);
+      --text-primary: rgba(255, 255, 255, 0.9);
+      --text-secondary: rgba(255, 255, 255, 0.8);
+      --text-tertiary: rgba(255, 255, 255, 0.6);
+      --text-quaternary: rgba(255, 255, 255, 0.4);
+      --border-light: rgba(255, 255, 255, 0.1);
+      --border-dark: rgba(255, 255, 255, 0.15);
+      --overlay-subtle: rgba(255, 255, 255, 0.08);
+      --overlay-button-bg: rgba(255, 255, 255, 0.08);
+      --overlay-hover: rgba(255, 255, 255, 0.08);
+      --overlay-active: rgba(255, 255, 255, 0.12);
+      --overlay-button-close: rgba(255, 59, 48, 0.1);
+      --overlay-disabled: rgba(255, 255, 255, 0.08);
+      --shadow-sm: rgba(0, 0, 0, 0.5);
+      --shadow-md: rgba(0, 0, 0, 0.5);
+      --shadow-lg: rgba(0, 0, 0, 0.5);
+      --shadow-tooltip: rgba(0, 0, 0, 0.5);
+      --focus-primary: rgba(0, 122, 255, 0.1);
+      --shadow-primary-sm: rgba(0, 122, 255, 0.3);
+      --shadow-primary-md: rgba(0, 122, 255, 0.4);
+      --shadow-success-sm: rgba(52, 199, 89, 0.3);
+      --overlay-modal-bg: rgba(0, 0, 0, 0.5);
+      --scrollbar-default: rgba(255, 255, 255, 0.2);
+      --scrollbar-hover: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: opacity 300ms ease;
+  }
+}
+
+/* ============================================================================
+   Component-specific styles (pseudo-elements, scrollbars, theme-dependent)
+   ============================================================================ */
+
+/* Textarea placeholder */
+.editor-textarea::placeholder {
+  color: var(--text-quaternary);
+}
+
+/* Textarea scrollbar */
+.editor-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-textarea::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: var(--scrollbar-default);
+}
+
+.editor-textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover);
+}
+
+/* Tab bar theme-specific backdrop filters */
+:root[data-theme="light"] .tab-bar {
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+:root[data-theme="dark"] .tab-bar {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+/* Tab item tooltip */
+.tab-item[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  display: block;
+  margin-bottom: 12px;
+  white-space: pre;
+  word-break: break-all;
+  text-align: left;
+  min-width: 120px;
+  max-width: 280px;
+  line-height: 1.4;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 9999;
+  color: var(--text-tooltip);
+  background: var(--bg-tooltip);
+  box-shadow: 0 10px 25px var(--shadow-tooltip);
+}
+
+.tab-item[data-tooltip]:hover::after,
+.tab-item[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.tab-item:hover:not(.active) {
+  color: var(--text-secondary);
+}
+
+/* Copy status icon animation */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Settings slider styles (webkit and moz) */
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--color-primary);
+  box-shadow: 0 1px 3px var(--shadow-primary-sm);
+}
+
+.settings-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px var(--shadow-primary-md);
+}
+
+.settings-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  background: var(--color-primary);
+  box-shadow: 0 1px 3px var(--shadow-primary-sm);
+}
+
+.settings-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px var(--shadow-primary-md);
+}
+
+/* Shortcut listening pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.shortcut-listening {
+  animation: pulse 1.5s ease-in-out infinite;
+}

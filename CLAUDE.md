@@ -18,12 +18,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Sokki** は macOS 向けの超軽量・常駐型メモアプリケーション。Tauri (Rust + React) で構築され、グローバルショートカットで瞬時に起動できる Mac ネイティブデザインを採用している。
 
 ### 技術スタック
-- **Frontend**: React 18 + TypeScript + Vite
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS v4
 - **Backend**: Tauri 2.x (Rust)
 - **主要依存**:
   - `tauri-plugin-global-shortcut`: グローバルショートカット管理
   - `tauri-plugin-clipboard-manager`: クリップボード操作
   - `tauri-plugin-shell`: シェル操作
+  - `tailwindcss` + `@tailwindcss/postcss`: スタイリング
 
 ## コマンド
 
@@ -67,6 +68,7 @@ npm install
 src/
 ├── main.tsx                    # React エントリーポイント
 ├── App.tsx                     # メインコンポーネント
+├── App.css                     # Tailwind CSS + カスタムスタイル
 ├── components/                 # UI コンポーネント
 │   ├── Editor.tsx             # テキストエディタ
 │   ├── TabBar.tsx             # タブバー
@@ -81,11 +83,6 @@ src/
 ├── lib/                        # ライブラリ層
 │   └── commands/              # Tauri コマンド
 ├── utils/                      # ユーティリティ関数
-├── styles/                     # CSS ファイル
-│   ├── colors.css             # 色・テーマ変数
-│   ├── components.css         # コンポーネント用スタイル
-│   ├── settings.css           # 設定パネルスタイル
-│   └── ...
 └── theme/                      # テーマ管理
     ├── ThemeContext.tsx       # テーマプロバイダ
     └── tokens.css             # テーマトークン
@@ -148,21 +145,23 @@ src/
 
 ## スタイル管理
 
-### CSS ファイル構造
+### Tailwind CSS v4 統合
 
-```
-src/styles/
-├── colors.css              # 色・テーマ変数（一元管理）
-├── components.css          # コンポーネントスタイル
-├── settings.css            # 設定パネルスタイル
-├── base.css                # 基本スタイル
-├── layout.css              # レイアウト
-└── ...
-```
+このプロジェクトは **Tailwind CSS v4** を使用してスタイリングを行っています。
+
+#### ファイル構成
+
+- **src/App.css**: メインスタイルシート
+  - `@import "tailwindcss"` でTailwind CSS v4をインポート
+  - CSS変数を使用したカスタムテーマ定義
+  - コンポーネント固有のスタイル
+
+- **tailwind.config.js**: Tailwind設定ファイル
+- **postcss.config.js**: PostCSS設定（`@tailwindcss/postcss`を使用）
 
 ### CSS 変数の一元管理
 
-**src/styles/colors.css** で色・シャドウ・背景をすべて一元管理しています。テーマ変更やスタイル修正時は、必ず colors.css の変数を使用してください。
+**src/App.css** で色・シャドウ・背景をすべて一元管理しています。テーマ変更やスタイル修正時は、必ず App.css の CSS 変数を使用してください。
 
 #### CSS 変数の定義階層
 
@@ -180,43 +179,37 @@ src/styles/
    - ライトテーマ専用の上書き（同じ変数名で値を上書き）
 
 3. **`:root[data-theme="dark"]`**
-   - ダークテーマ（`--bg-editor: rgba(29, 29, 36, 1)` など）
+   - ダークテーマ（`--bg-editor: rgba(73, 73, 76, 1)` など）
 
 4. **`@media (prefers-color-scheme: dark)`**
    - ブラウザのシステム設定フォールバック（`data-theme` が未指定時）
 
-#### 例：新しい色を追加する場合
+#### スタイリング方法
 
-```css
-/* colors.css :root に定義 */
-:root {
-  --new-color: rgba(100, 150, 200, 0.8);
-}
+1. **Tailwind ユーティリティクラス（推奨）**: `className="flex items-center gap-2"`
+2. **CSS変数を使用したカスタムスタイル**: `background: var(--bg-tabbar);`
+3. **既存のクラス**: `.container`, `.tab-bar`, `.settings-overlay` など
 
-/* ライトテーマで異なる色を使う場合 */
-:root[data-theme="light"] {
-  --new-color: rgba(50, 100, 200, 0.9);
-}
+#### 新しいスタイルを追加する場合
 
-/* ダークテーマ */
-:root[data-theme="dark"] {
-  --new-color: rgba(150, 180, 220, 0.7);
-}
+```tsx
+// Tailwindユーティリティクラスを使用
+<div className="flex items-center justify-center p-4 rounded-lg bg-blue-500 text-white">
+  Content
+</div>
 
-/* フォールバック */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --new-color: rgba(150, 180, 220, 0.7);
-  }
-}
+// CSS変数を使用する場合（テーマ対応が必要な場合）
+<div style={{ background: 'var(--bg-editor)', color: 'var(--text-primary)' }}>
+  Content
+</div>
 ```
 
 #### 色の使用規則（【MUST】）
 
 - **直書き禁止**: `background: rgba(50, 50, 50);` ❌
-- **変数使用必須**: `background: var(--bg-tabbar);` ✅
+- **Tailwindまたは変数使用必須**: `className="bg-gray-800"` または `background: var(--bg-tabbar);` ✅
 - テーマ依存性が高い色（背景、テキスト、シャドウ）は**必ず** CSS 変数を使う
-- colors.css に新しい色を追加して、他のファイルで変数を使用する形に統一
+- Tailwindのユーティリティクラスは、テーマに依存しない固定色やレイアウトに使用
 
 ## カスタマイズ
 

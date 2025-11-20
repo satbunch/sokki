@@ -55,7 +55,13 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
+    <div
+      className="w-screen h-screen flex flex-col overflow-hidden transition-all duration-[120ms]"
+      style={{
+        background: 'var(--bg-container)',
+        boxShadow: '0 20px 60px var(--shadow-sm), 0 0 0 0.5px var(--border-light)'
+      }}
+    >
       <Editor />
       <TabBar />
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}

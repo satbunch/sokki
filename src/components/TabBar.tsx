@@ -15,15 +15,21 @@ export function TabBar() {
   };
 
   return (
-    <div className="tab-bar">
+    <div
+      className="grid h-10 px-4 gap-3 m-0 z-[100] overflow-visible transition-all duration-[120ms] tab-bar"
+      style={{
+        gridTemplateColumns: 'auto 1fr auto',
+        background: 'var(--bg-tabbar)',
+        borderRadius: '0 0 0 0'
+      }}
+    >
       {/* Left Spacer */}
-      <div className="tab-spacer-left" />
+      <div className="w-6 flex-shrink-0" />
 
       {/* Center Tabs */}
       <div
-        className="tab-center"
+        className="grid flex-1 min-w-0 overflow-visible"
         style={{
-          display: 'grid',
           gridTemplateColumns: `repeat(${n || 1}, 1fr)`,
         }}
       >
@@ -39,8 +45,15 @@ export function TabBar() {
       </div>
 
       {/* Right Status */}
-      <div className="tab-status-right">
-        <div className={`copy-status-icon ${copyStatus === 'copied' ? 'copied' : ''}`}>
+      <div className="w-6 flex items-center justify-end flex-shrink-0">
+        <div
+          className="flex items-center justify-center transition-all duration-150 rounded-md copy-status-icon"
+          style={{
+            color: copyStatus === 'copied' ? 'var(--color-success)' : 'var(--text-tertiary)',
+            background: 'var(--bg-icon)',
+            animation: copyStatus === 'copied' ? 'scaleIn 0.15s ease-out' : 'none'
+          }}
+        >
           {copyStatus === 'copied' ? <Check size={20} strokeWidth={2} /> : <Clipboard size={20} strokeWidth={2} />}
         </div>
       </div>

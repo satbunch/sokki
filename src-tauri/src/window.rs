@@ -70,6 +70,7 @@ pub fn init(app: &App) -> Result<(), Box<dyn std::error::Error>> {
         .center()
         .visible(true)
         .resizable(true)
+        .visible_on_all_workspaces(true)
         .maximizable(false);
 
     // set transparent title bar only when building for macOS

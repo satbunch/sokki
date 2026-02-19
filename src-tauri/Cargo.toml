@@ -3,7 +3,7 @@ authors = ["you"]
 description = "A Tauri App"
 edition = "2021"
 name = "sokki"
-version = "0.1.0"
+version = "0.2.0"
 
 [build-dependencies]
 tauri-build = {version = "2", features = [] }

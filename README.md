@@ -41,6 +41,7 @@ Requirements:
 | Cmd + N                   | Open new memo tab                |
 | Cmd + W                   | Close current tab                |
 | Cmd + C                   | Copy current memo to clipboard   |
+| Cmd + Q                   | Quit the app                     |
 
 ## Settings
 
@@ -88,6 +89,6 @@ If you discover a vulnerability, please report it privately via GitHub issues or
 
 ## Version
 
-Current release: **v0.1.0**
+Current release: **v0.2.0**
 
-Changelog and tagging will begin in future minor versions.
+See [CHANGELOG.md](./CHANGELOG.md) for details.
